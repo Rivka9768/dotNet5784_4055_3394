@@ -19,7 +19,6 @@ namespace DO;
 public record Task
 (
 int Id,
-
 string Description,
 string TaskNickname,
 bool Milestone,
