@@ -10,7 +10,7 @@ public class TaskImplementation : ITask
     public int Create(Task item)
     {
         int id = DataSource.Config.NextTaskId;
-        item.Id=id;
+        item.Id = id;
         throw new NotImplementedException();
     }
 
