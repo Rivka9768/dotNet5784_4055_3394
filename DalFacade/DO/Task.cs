@@ -18,7 +18,7 @@ namespace DO;
 /// <param name="Difficulty">the task's level of difficulty</param>
 public record Task
 (
-int Id,
+int Id ,
 string Description,
 string TaskNickname,
 bool Milestone,
