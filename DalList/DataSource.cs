@@ -19,8 +19,8 @@ internal static class DataSource
         private static int nextTaskId = startTaskId‏‏;
         internal static int NextTaskId { get => nextTaskId++; }
     }
-    internal static List<DO.Dependency> Dependencys { get; }= new();
-    internal static List<DO.Engineer> Engineers { get; }= new();
-    internal static List<DO.Task> Tasks { get; }= new();
+    internal static List<DO.Dependency> Dependencys { get; }= new(250);
+    internal static List<DO.Engineer> Engineers { get; }= new(40);
+    internal static List<DO.Task> Tasks { get; }= new(100);
 
 }

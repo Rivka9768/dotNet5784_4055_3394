@@ -7,7 +7,7 @@ namespace DO;
 /// <param name="Description">the description of the task</param>
 /// <param name="TaskNickname">the task's nickname</param>
 /// <param name="Milestone">???????????????????????????????</param>
-/// <param name="ProductionDate">the date the tassk was created</param>
+/// <param name="ProductionDate">the date the task was created</param>
 /// <param name="StartDate">the start date of the task</param>
 /// <param name="EstimatedDate">estimated date to complete the task</param>
 /// <param name="FinalDate">final date of completing the task</param>

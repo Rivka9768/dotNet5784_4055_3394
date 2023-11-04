@@ -15,26 +15,34 @@ public class EngineerImplementation : IEngineer
             DataSource.Engineers.Add(item);
             return item.Id;
         }
-            throw new NotImplementedException("can not create existing engineer");
+            throw new NotImplementedException("An object of type Engineer with such an ID already exists");
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        Engineer? engineer = DataSource.Engineers.Find((e) => e.Id == id);
+        if (engineer == null) 
+            throw new NotImplementedException("An object of type Engineer with such an ID does not exist");
+        DataSource.Engineers.Remove(engineer);
     }
 
     public Engineer? Read(int id)
     {
-        throw new NotImplementedException();
+        Engineer? engineer = DataSource.Engineers.Find((e) => e.Id == id);
+        return engineer;
     }
 
     public List<Engineer> ReadAll()
     {
-        throw new NotImplementedException();
+        return new List<Engineer>(DataSource.Engineers);
     }
 
     public void Update(Engineer item)
     {
-        throw new NotImplementedException();
+        Engineer? engineer = DataSource.Engineers.Find((e) => e.Id == item.Id);
+        if(engineer==null)
+            throw new NotImplementedException("An object of type Engineer with such an ID does not exist");
+        DataSource.Engineers.Remove(engineer);
+        DataSource.Engineers.Add(item);
     }
 }
