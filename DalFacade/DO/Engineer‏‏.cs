@@ -8,11 +8,11 @@ namespace DO;
 /// <param name="Email">the engineer's email address</param>
 /// <param name="Level"> the engineer's experience level</param>
 /// <param name="SaleryPerHour">the amount the engineer gets per hour</param>
-public record Engineer‏‏
+public record Engineer
 (
     int Id,
     string Name,
     string Email,
-    int Level,
+    EngineerExperience Level,
     double SaleryPerHour
 );
