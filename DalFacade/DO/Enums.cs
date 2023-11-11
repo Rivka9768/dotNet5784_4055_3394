@@ -5,7 +5,7 @@ namespace DO;
 
 public enum EngineerExperience
 {
-   Novice = 1,
+   Novice,
    AdvancedBeginner, 
    Competent,
    Proficient,
