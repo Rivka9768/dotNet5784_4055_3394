@@ -76,10 +76,23 @@ public static class Initialization
             EngineerExperience _difficulty = (EngineerExperience)s_rand.Next(0, 5);
             List<Engineer> qualifiedEngineers = engineers.FindAll((e) => e.Level >= _difficulty);
             int amountEngineers = qualifiedEngineers.Count();
-            int randomEngineerNum = s_rand.Next(0, amountEngineers);
+            int randomEngineerNum = s_rand.Next(0, amountEngineers+1);
             int _engineerId = qualifiedEngineers[randomEngineerNum].Id;
             Task newTask = new(_id, _description, _productionDate, _deadline, _difficulty, _engineerId, _milestone);
             s_dalTask!.Create(newTask);
         }
+    }
+
+    public static IEngineer? dalEngineer;
+    public static ITask? dalETask;
+    public static IDependency? dalDependency;
+    public static void Do(ITask s_dalTask, IDependency s_dalDependency, IEngineer s_dalEngineer)
+    {
+        s_dalTask = dalETask ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalDependency = dalDependency ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
+        createDependencys();
+        createEngineers();
+        createTasks();
     }
 }

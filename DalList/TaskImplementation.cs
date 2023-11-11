@@ -18,7 +18,7 @@ public class TaskImplementation : ITask
     {
         Task? task = DataSource.Tasks.Find((t) => t.Id == id);
         if (task == null)
-            throw new NotImplementedException("An object of type Task with such an ID does not exist");
+            throw new Exception("An object of type Task with such an ID does not exist");
         DataSource.Tasks.Remove(task);
     }
 
@@ -37,7 +37,7 @@ public class TaskImplementation : ITask
     {
         Task? task = DataSource.Tasks.Find((t) => t.Id == item.Id);
         if(task == null) 
-            throw new NotImplementedException("An object of type Task with such an ID does not exist");
+            throw new Exception("An object of type Task with such an ID does not exist");
         DataSource.Tasks.Remove(task);
         DataSource.Tasks.Add(item);
     }

@@ -18,7 +18,7 @@ public class DependencyImplementation : IDependency
     {
         Dependency? dependency = DataSource.Dependencys.Find((d) => d.Id == id);
         if (dependency == null)
-            throw new NotImplementedException("An object of type Dependency with such an ID does not exist");
+            throw new Exception("An object of type Dependency with such an ID does not exist");
         DataSource.Dependencys.Remove(dependency);
     }
 
@@ -37,7 +37,7 @@ public class DependencyImplementation : IDependency
     {
         Dependency? dependency = DataSource.Dependencys.Find((d) => d.Id == item.Id);
         if(dependency==null)
-            throw new NotImplementedException("An object of type Dependency with such an ID does not exist");
+            throw new Exception("An object of type Dependency with such an ID does not exist");
         DataSource.Dependencys.Remove(dependency);
         DataSource.Dependencys.Add(item);
     }
