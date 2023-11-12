@@ -33,12 +33,12 @@ public static class Initialization
             int i = 1;
             int _id;
             do
-                _id = s_rand.Next(100000000, 999999999);
+                _id = s_rand.Next(100000000, 1000000000);
             while (s_dalEngineer!.Read(_id) != null);
-            string _email = engineerEmails[i];
+            string _email = engineerEmails[i++];
             EngineerExperience _level = (EngineerExperience)s_rand.Next(0, 5);
             double _saleryPerHour = 100 * ((int)_level+1);
-            Engineer newEngineer = new(_id, _name, _email, _level, _saleryPerHour);
+            Engineer newEngineer = new(_id, _name, _level, _saleryPerHour, _email);
             s_dalEngineer!.Create(newEngineer);
         }
     }

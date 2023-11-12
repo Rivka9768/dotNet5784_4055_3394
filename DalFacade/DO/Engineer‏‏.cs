@@ -12,7 +12,7 @@ public record Engineer
 (
     int Id,
     string Name,
-    string Email,
     EngineerExperience Level,
-    double SaleryPerHour
+    double SaleryPerHour,
+    string? Email=""
 );
