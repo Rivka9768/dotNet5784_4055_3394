@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 using System.Reflection.Emit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DalTest
 {
@@ -116,10 +117,81 @@ namespace DalTest
             }
             while (action != 0);
         }
-        private static void taskCreate() { }
-        private static void taskRead() { }
-        private static void taskReadAll() { }
-        private static void taskUpDate() { }
+        private static void taskCreate()
+        {
+            Console.WriteLine("Please enter id, description , production date, deadline, task dificulty, engineer id," +
+                " milestone, start date ,estimated end date, final date,task nickname, remarks,products:");
+            string id = Console.ReadLine()!;
+            string description = Console.ReadLine()!;
+            string productionDate = Console.ReadLine()!;
+            string deadline = Console.ReadLine()!;
+            string difficulty = Console.ReadLine()!;
+            string? engineerId = Console.ReadLine();
+            string? milestone = Console.ReadLine();
+            string? startDate = Console.ReadLine();
+            string? estimatedEndDate = Console.ReadLine();
+            string? finalDate = Console.ReadLine();
+            string? taskNickname = Console.ReadLine();
+            string? remarks = Console.ReadLine();
+            string? products = Console.ReadLine();
+            DO.Task newTask = new(Convert.ToInt32(id), description, DateTime.Parse(productionDate),DateTime.Parse(deadline), (EngineerExperience)Convert.ToInt32(difficulty),
+                Convert.ToInt32(engineerId), Convert.ToBoolean(milestone), DateTime.Parse(startDate), DateTime.Parse(estimatedEndDate), DateTime.Parse(finalDate), taskNickname, remarks, products);
+            try
+            {
+                s_dalTask!.Create(newTask);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        private static void taskRead() 
+        {
+            Console.WriteLine("Please enter the id:");
+            string id = Console.ReadLine()!;
+            Console.WriteLine(s_dalTask?.Read(Convert.ToInt32(id)));
+        }
+        private static void taskReadAll() 
+        {
+            List<DO.Task> tasks = s_dalTask!.ReadAll();
+            tasks.ForEach(task => { Console.WriteLine(task); });
+        }
+        private static void taskUpDate() 
+        {
+            Console.WriteLine("Please enter the id:");
+            string id = Console.ReadLine()!;
+            ///האם צריך לומר אם אין כזה משימה???????????
+            DO.Task? task = s_dalTask?.Read(Convert.ToInt32(id));
+            Console.WriteLine(task);
+            Console.WriteLine("Please enter the properties you want to update:  description , production date, deadline, task dificulty, " +
+                "engineer id, milestone, start date ,estimated end date, final date,task nickname, remarks,products");
+            string? description = Console.ReadLine();
+            string? productionDate = Console.ReadLine();
+            string? deadline = Console.ReadLine();
+            string? difficulty = Console.ReadLine();
+            string? engineerId = Console.ReadLine();
+            string? milestone = Console.ReadLine();
+            string? startDate = Console.ReadLine();
+            string? estimatedEndDate = Console.ReadLine();
+            string? finalDate = Console.ReadLine();
+            string? taskNickname = Console.ReadLine();
+            string? remarks = Console.ReadLine();
+            string? products = Console.ReadLine();
+            ///???מה לעשות אם אין כזה אוביקט אם המספר זהות הזה
+            DO.Task newTask = new(task.Id, (description != null) ? description : task.Description, (productionDate != null) ? DateTime.Parse(productionDate) : task.ProductionDate, (deadline != null) ? DateTime.Parse(deadline) : task.Deadline,
+                (difficulty != null) ? (EngineerExperience)Convert.ToInt32(difficulty) : task.Difficulty,(engineerId != null) ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != null) ? Convert.ToBoolean(milestone) : task.Milestone
+                ,(startDate != null) ? DateTime.Parse(startDate) : task.StartDate, (estimatedEndDate != null) ? DateTime.Parse(estimatedEndDate) : task.EstimatedEndDate, (finalDate != null) ? DateTime.Parse(finalDate) : task.FinalDate
+                , (taskNickname != null) ? taskNickname : task.TaskNickname, (remarks != null) ? remarks : task.Remarks, (products != null) ? products : task.Products);
+            try
+            {
+                s_dalTask!.Update(newTask);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+            }
+        }
         private static void taskDelete() { }
         private static void taskFunc() 
         {
