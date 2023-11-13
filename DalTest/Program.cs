@@ -13,54 +13,78 @@ namespace DalTest
         private static IDependency? s_dalDependency = new DependencyImplementation(); //stage 1
         public enum Entities { EXIT, ENGINEER, TASK, DEPENDENCY };
         public enum Actions { EXIT, CREATE, READ, READALL, UPDATE, DELETE };
+        
+        /// <summary>
+        /// creates a new engineer
+        /// </summary>
         private static void engineerCreate()
         {
             Console.WriteLine("Please enter id, name , level, salary per hour, email");
-            string id = Console.ReadLine()!;
+            int.TryParse(Console.ReadLine(), out int id);
             string name = Console.ReadLine()!;
-            string level = Console.ReadLine()!;
-            string salary = Console.ReadLine()!;
+            int.TryParse(Console.ReadLine(), out int level);
+            double.TryParse(Console.ReadLine(), out double salary);
             string? email = Console.ReadLine();
-            Engineer newEngineer = new(Convert.ToInt32(id), name, (EngineerExperience)Convert.ToInt32(level), Convert.ToDouble(salary), email);
+            Engineer newEngineer = new(id, name, (EngineerExperience)level, salary, email);
             try
             {
                 s_dalEngineer!.Create(newEngineer);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
         }
+        
+        /// <summary>
+        /// shows to the user detailes of a specific enginer
+        /// </summary>
+        private static void engineerRead()
+        {
+            Console.WriteLine("Please enter the id:");
+            string id = Console.ReadLine()!;
+            Console.WriteLine(s_dalEngineer?.Read(Convert.ToInt32(id)));
+        }
+        
+        /// <summary>
+        /// shows to the user the details of all engineers
+        /// </summary>
         private static void engineerReadAll()
         {
             List<Engineer> engineers = s_dalEngineer!.ReadAll();
             engineers.ForEach(engineer => { Console.WriteLine(engineer); });
         }
+        
+        /// <summary>
+        /// updates custom details of a specific engineer
+        /// </summary>
         private static void engineerUpDate()
         {
             Console.WriteLine("Please enter the id:");
-            string id = Console.ReadLine()!;
-            ///האם צריך לומר אם אין כזה מהנדס???????????
-            Engineer? engineer = s_dalEngineer?.Read(Convert.ToInt32(id));
+            int.TryParse(Console.ReadLine(), out int id);
+            Engineer? engineer = s_dalEngineer?.Read(id);
             Console.WriteLine(engineer);
             Console.WriteLine("Please enter the properties you want to update: name , level, salary per hour, email");
             string? name = Console.ReadLine();
             string? level = Console.ReadLine();
             string? salary = Console.ReadLine();
             string? email = Console.ReadLine();
-            ///???מה לעשות אם אין כזה אוביקט אם המספר זהות הזה
-            Engineer newEngineer = new(engineer.Id, (name != "") ? name : engineer.Name, (level != "") ? (EngineerExperience)Convert.ToInt32(level) : engineer.Level,
-               (salary != "") ? Convert.ToDouble(salary) : engineer.SaleryPerHour, (email != "") ? email : engineer.Email);
+            Engineer newEngineer = new(engineer.Id, (name != "") ? name : engineer.Name, (level !="") ? (EngineerExperience)(Convert.ToInt32(level)) : engineer.Level,
+               (salary !="") ? Convert.ToDouble(salary) : engineer.SaleryPerHour, (email != "") ? email : engineer.Email);
             try
             {
                 s_dalEngineer!.Update(newEngineer);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
 
             }
         }
+        
+        /// <summary>
+        /// deletes a specific enginner
+        /// </summary>
         private static void engineerDelete()
         {
             Console.WriteLine("Please enter the id:");
@@ -71,15 +95,13 @@ namespace DalTest
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
         }
-        private static void engineerRead()
-        {
-            Console.WriteLine("Please enter the id:");
-            string id = Console.ReadLine()!;
-            Console.WriteLine(s_dalEngineer?.Read(Convert.ToInt32(id)));
-        }
+        
+        /// <summary>
+        /// the engineer navigation menue
+        /// </summary>
         private static void engineerFunc()
         {
             int action;
@@ -115,82 +137,116 @@ namespace DalTest
             }
             while (action != 0);
         }
+
+
+        /// <summary>
+        /// creates a new task
+        /// </summary>
         private static void taskCreate()
         {
-            Console.WriteLine("Please enter id, description , production date, deadline, task dificulty, engineer id," +
+            Console.WriteLine("Please enter  description , production date, deadline, task dificulty, engineer id," +
                 " milestone, start date ,estimated end date, final date,task nickname, remarks,products:");
-            string id = Console.ReadLine()!;
             string description = Console.ReadLine()!;
-            string productionDate = Console.ReadLine()!;
-            string deadline = Console.ReadLine()!;
-            string difficulty = Console.ReadLine()!;
-            string? engineerId = Console.ReadLine();
-            string? milestone = Console.ReadLine();
-            string? startDate = Console.ReadLine();
-            string? estimatedEndDate = Console.ReadLine();
-            string? finalDate = Console.ReadLine();
+            DateTime.TryParse(Console.ReadLine(), out DateTime productionDate);
+            DateTime.TryParse(Console.ReadLine(), out DateTime deadline);
+            int.TryParse(Console.ReadLine(), out int difficulty);
+            int.TryParse(Console.ReadLine(), out int engineerId);
+            bool.TryParse(Console.ReadLine(), out bool milestone);
+            DateTime.TryParse(Console.ReadLine(), out DateTime startDate);
+            DateTime.TryParse(Console.ReadLine(), out DateTime estimatedEndDate);
+            DateTime.TryParse(Console.ReadLine(), out DateTime finalDate);
             string? taskNickname = Console.ReadLine();
             string? remarks = Console.ReadLine();
             string? products = Console.ReadLine();
-            DO.Task newTask = new(Convert.ToInt32(id), description, DateTime.Parse(productionDate), DateTime.Parse(deadline), (EngineerExperience)Convert.ToInt32(difficulty),
-                Convert.ToInt32(engineerId), Convert.ToBoolean(milestone), DateTime.Parse(startDate), DateTime.Parse(estimatedEndDate), DateTime.Parse(finalDate), taskNickname, remarks, products);
+            DO.Task newTask = new(0, description, productionDate, deadline, (EngineerExperience)difficulty,
+                engineerId, milestone, startDate, estimatedEndDate, finalDate, taskNickname, remarks, products);
             try
             {
                 s_dalTask!.Create(newTask);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
         }
+        
+        /// <summary>
+        /// shows to the user detailes of a specific task
+        /// </summary>
         private static void taskRead()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
             Console.WriteLine(s_dalTask?.Read(Convert.ToInt32(id)));
         }
+        
+        /// <summary>
+        /// shows to the user the details of all tasks
+        /// </summary>
         private static void taskReadAll()
         {
             List<DO.Task> tasks = s_dalTask!.ReadAll();
             tasks.ForEach(task => { Console.WriteLine(task); });
         }
+        
+        /// <summary>
+        /// updates custom details of a specific task
+        /// </summary>
         private static void taskUpDate()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
-            ///האם צריך לומר אם אין כזה משימה???????????
             DO.Task? task = s_dalTask?.Read(Convert.ToInt32(id));
             Console.WriteLine(task);
             Console.WriteLine("Please enter the properties you want to update:  description , production date, deadline, task dificulty, " +
                 "engineer id, milestone, start date ,estimated end date, final date,task nickname, remarks,products");
             string? description = Console.ReadLine();
-            string? productionDate = Console.ReadLine();
-            string? deadline = Console.ReadLine();
+            DateTime.TryParse(Console.ReadLine(), out DateTime productionDate);
+            DateTime.TryParse(Console.ReadLine(), out DateTime deadline);
             string? difficulty = Console.ReadLine();
             string? engineerId = Console.ReadLine();
             string? milestone = Console.ReadLine();
-            string? startDate = Console.ReadLine();
-            string? estimatedEndDate = Console.ReadLine();
-            string? finalDate = Console.ReadLine();
+            DateTime.TryParse(Console.ReadLine(), out DateTime startDate);
+            DateTime.TryParse(Console.ReadLine(), out DateTime estimatedEndDate);
+            DateTime.TryParse(Console.ReadLine(), out DateTime finalDate);
             string? taskNickname = Console.ReadLine();
             string? remarks = Console.ReadLine();
             string? products = Console.ReadLine();
-            ///???מה לעשות אם אין כזה אוביקט אם המספר זהות הזה
-            DO.Task newTask = new(task.Id, (description != null) ? description : task.Description, (productionDate != null) ? DateTime.Parse(productionDate) : task.ProductionDate, (deadline != null) ? DateTime.Parse(deadline) : task.Deadline,
-                (difficulty != null) ? (EngineerExperience)Convert.ToInt32(difficulty) : task.Difficulty, (engineerId != null) ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != null) ? Convert.ToBoolean(milestone) : task.Milestone
-                , (startDate != null) ? DateTime.Parse(startDate) : task.StartDate, (estimatedEndDate != null) ? DateTime.Parse(estimatedEndDate) : task.EstimatedEndDate, (finalDate != null) ? DateTime.Parse(finalDate) : task.FinalDate
-                , (taskNickname != null) ? taskNickname : task.TaskNickname, (remarks != null) ? remarks : task.Remarks, (products != null) ? products : task.Products);
+            DO.Task newTask = new(task.Id, (description != "") ? description : task.Description, (productionDate != default(DateTime)) ?productionDate : task.ProductionDate, (deadline != default(DateTime)) ? deadline : task.Deadline,
+                (difficulty!="") ? (EngineerExperience)(Convert.ToInt32(difficulty)) : task.Difficulty, (engineerId != "") ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != "") ? Convert.ToBoolean(milestone) : task.Milestone
+                , (startDate != default(DateTime)) ? startDate : task.StartDate, (estimatedEndDate != default(DateTime)) ? estimatedEndDate : task.EstimatedEndDate, (finalDate != default(DateTime)) ? finalDate : task.FinalDate
+                , (taskNickname != "") ? taskNickname : task.TaskNickname, (remarks != "") ? remarks : task.Remarks, (products != "") ? products : task.Products);
             try
             {
                 s_dalTask!.Update(newTask);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
 
             }
         }
-        private static void taskDelete() { }
+        
+        /// <summary>
+        /// deletes a specific task
+        /// </summary>
+        private static void taskDelete() 
+        {
+            Console.WriteLine("Please enter the id:");
+            string id = Console.ReadLine()!;
+            try
+            {
+                s_dalTask!.Delete(Convert.ToInt32(id));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        
+        /// <summary>
+        /// the task navigation menue
+        /// </summary>
         private static void taskFunc()
         {
             int action;
@@ -226,23 +282,29 @@ namespace DalTest
             }
             while (action != 0);
         }
+
+        /// <summary>
+        /// creates a new dependency
+        /// </summary>
         private static void dependencyCreate()
         {
-            Console.WriteLine("Please enter id, id previous task , id dependant task");
-            string id = Console.ReadLine()!;
-            string idPreviousTask = Console.ReadLine()!;
-            string idDependantTask = Console.ReadLine()!;
-
-            Dependency newDependency = new(Convert.ToInt32(id), Convert.ToInt32(idPreviousTask), Convert.ToInt32(idDependantTask));
+            Console.WriteLine("Please enter  id of previous task , id of dependant task");
+            int.TryParse(Console.ReadLine(), out int idPreviousTask);
+            int.TryParse(Console.ReadLine(), out int idDependantTask);
+            Dependency newDependency = new(0, idPreviousTask, idDependantTask);
             try
             {
                 s_dalDependency!.Create(newDependency);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
         }
+        
+        /// <summary>
+        /// shows to the user detailes of a specific dependency
+        /// </summary>
         private static void dependencyRead()
         {
 
@@ -251,6 +313,10 @@ namespace DalTest
             Console.WriteLine(s_dalDependency?.Read(Convert.ToInt32(id)));
 
         }
+        
+        /// <summary>
+        /// shows to the user the details of all dependencies
+        /// </summary>
         private static void dependencyReadAll()
         {
 
@@ -258,29 +324,35 @@ namespace DalTest
             dependencies.ForEach(dependency => { Console.WriteLine(dependency); });
 
         }
+        
+        /// <summary>
+        /// updates custom details of a specific dependency
+        /// </summary>
         private static void dependencyUpDate()
         {
             Console.WriteLine("Please enter the id:");
-            string id = Console.ReadLine()!;
-            ///האם צריך לומר אם אין כזה תלות???????????
-            Dependency? dependency = s_dalDependency?.Read(Convert.ToInt32(id));
+            int.TryParse(Console.ReadLine(), out int id);
+            Dependency? dependency = s_dalDependency?.Read(id);
             Console.WriteLine(dependency);
             Console.WriteLine("Please enter the properties you want to update:  id previous task , id dependant task");
-            string? idPreviousTask = Console.ReadLine()!;
-            string? idDependantTask = Console.ReadLine()!;
-            ///???מה לעשות אם אין כזה אוביקט אם המספר זהות הזה
-            Dependency newDependency = new(Convert.ToInt32(dependency.Id), (idPreviousTask != null) ? Convert.ToInt32(idPreviousTask) : dependency.IdPreviousTask,
-                (idDependantTask != null) ? Convert.ToInt32(idDependantTask) : dependency.IdDependantTask);
+            string? idPreviousTask = Console.ReadLine();
+            string? idDependantTask= Console.ReadLine();
+            Dependency newDependency = new(dependency.Id, (idPreviousTask != "") ? Convert.ToInt32(idPreviousTask) : dependency.IdPreviousTask,
+                (idDependantTask != "") ? Convert.ToInt32(idDependantTask) : dependency.IdDependantTask);
             try
             {
                 s_dalDependency!.Update(newDependency);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
 
             }
         }
+        
+        /// <summary>
+        /// deletes a specific dependency
+        /// </summary>
         private static void dependencyDelete()
         {
             Console.WriteLine("Please enter the id:");
@@ -291,9 +363,13 @@ namespace DalTest
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
         }
+        
+        /// <summary>
+        /// the dependency navigation menue
+        /// </summary>
         private static void dependencyFunc()
         {
             int action;
@@ -329,6 +405,10 @@ namespace DalTest
             }
             while (action != 0);
         }
+        
+        /// <summary>
+        /// main navigation menue
+        /// </summary>
         private static void mainMenue()
         {
             int entity;
@@ -358,8 +438,14 @@ namespace DalTest
         }
         static void Main()
         {
+            try
+            {
+                Initialization.Do(s_dalTask, s_dalDependency, s_dalEngineer);
+            }catch(Exception e) 
+            { 
+                Console.WriteLine(e);    
+            }
 
-            Initialization.Do(s_dalTask, s_dalDependency, s_dalEngineer);
             mainMenue();
             return;
         }
