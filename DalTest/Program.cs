@@ -6,6 +6,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DalTest
 {
+
     internal class Program
     {
         private static IEngineer? s_dalEngineer = new EngineerImplementation(); //stage 1
