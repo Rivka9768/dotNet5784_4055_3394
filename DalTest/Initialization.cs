@@ -75,9 +75,13 @@ public static class Initialization
             List<Engineer> engineers= s_dalEngineer!.ReadAll();
             EngineerExperience _difficulty = (EngineerExperience)s_rand.Next(0, 5);
             List<Engineer> qualifiedEngineers = engineers.FindAll((e) => e.Level >= _difficulty);
-            int amountEngineers = qualifiedEngineers.Count();
-            int randomEngineerNum = s_rand.Next(0, amountEngineers+1);
-            int _engineerId = qualifiedEngineers[randomEngineerNum].Id;
+            int amountEngineers = qualifiedEngineers.Count;
+            int? _engineerId = null;
+            if (amountEngineers!=0)
+            {
+                int randomEngineerNum = s_rand.Next(0, amountEngineers);
+                _engineerId = qualifiedEngineers[randomEngineerNum].Id;
+            }
             Task newTask = new(_id, _description, _productionDate, _deadline, _difficulty, _engineerId, _milestone);
             s_dalTask!.Create(newTask);
         }

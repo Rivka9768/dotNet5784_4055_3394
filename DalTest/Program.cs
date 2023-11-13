@@ -6,7 +6,6 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DalTest
 {
-
     internal class Program
     {
         private static IEngineer? s_dalEngineer = new EngineerImplementation(); //stage 1
@@ -14,8 +13,6 @@ namespace DalTest
         private static IDependency? s_dalDependency = new DependencyImplementation(); //stage 1
         public enum Entities { EXIT, ENGINEER, TASK, DEPENDENCY };
         public enum Actions { EXIT, CREATE, READ, READALL, UPDATE, DELETE };
-
-        /// איך להדפיס את האוביקטים של הישויות בתור אוביקטים?????
         private static void engineerCreate()
         {
             Console.WriteLine("Please enter id, name , level, salary per hour, email");
@@ -52,8 +49,8 @@ namespace DalTest
             string? salary = Console.ReadLine();
             string? email = Console.ReadLine();
             ///???מה לעשות אם אין כזה אוביקט אם המספר זהות הזה
-            Engineer newEngineer = new(engineer.Id, (name != null) ? name : engineer.Name, (level != null) ? (EngineerExperience)Convert.ToInt32(level) : engineer.Level,
-               (salary != null) ? Convert.ToDouble(salary) : engineer.SaleryPerHour, (email != null) ? email : engineer.Email);
+            Engineer newEngineer = new(engineer.Id, (name != "") ? name : engineer.Name, (level != "") ? (EngineerExperience)Convert.ToInt32(level) : engineer.Level,
+               (salary != "") ? Convert.ToDouble(salary) : engineer.SaleryPerHour, (email != "") ? email : engineer.Email);
             try
             {
                 s_dalEngineer!.Update(newEngineer);
@@ -135,7 +132,7 @@ namespace DalTest
             string? taskNickname = Console.ReadLine();
             string? remarks = Console.ReadLine();
             string? products = Console.ReadLine();
-            DO.Task newTask = new(Convert.ToInt32(id), description, DateTime.Parse(productionDate),DateTime.Parse(deadline), (EngineerExperience)Convert.ToInt32(difficulty),
+            DO.Task newTask = new(Convert.ToInt32(id), description, DateTime.Parse(productionDate), DateTime.Parse(deadline), (EngineerExperience)Convert.ToInt32(difficulty),
                 Convert.ToInt32(engineerId), Convert.ToBoolean(milestone), DateTime.Parse(startDate), DateTime.Parse(estimatedEndDate), DateTime.Parse(finalDate), taskNickname, remarks, products);
             try
             {
@@ -146,18 +143,18 @@ namespace DalTest
                 Console.WriteLine(e.Message);
             }
         }
-        private static void taskRead() 
+        private static void taskRead()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
             Console.WriteLine(s_dalTask?.Read(Convert.ToInt32(id)));
         }
-        private static void taskReadAll() 
+        private static void taskReadAll()
         {
             List<DO.Task> tasks = s_dalTask!.ReadAll();
             tasks.ForEach(task => { Console.WriteLine(task); });
         }
-        private static void taskUpDate() 
+        private static void taskUpDate()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -180,8 +177,8 @@ namespace DalTest
             string? products = Console.ReadLine();
             ///???מה לעשות אם אין כזה אוביקט אם המספר זהות הזה
             DO.Task newTask = new(task.Id, (description != null) ? description : task.Description, (productionDate != null) ? DateTime.Parse(productionDate) : task.ProductionDate, (deadline != null) ? DateTime.Parse(deadline) : task.Deadline,
-                (difficulty != null) ? (EngineerExperience)Convert.ToInt32(difficulty) : task.Difficulty,(engineerId != null) ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != null) ? Convert.ToBoolean(milestone) : task.Milestone
-                ,(startDate != null) ? DateTime.Parse(startDate) : task.StartDate, (estimatedEndDate != null) ? DateTime.Parse(estimatedEndDate) : task.EstimatedEndDate, (finalDate != null) ? DateTime.Parse(finalDate) : task.FinalDate
+                (difficulty != null) ? (EngineerExperience)Convert.ToInt32(difficulty) : task.Difficulty, (engineerId != null) ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != null) ? Convert.ToBoolean(milestone) : task.Milestone
+                , (startDate != null) ? DateTime.Parse(startDate) : task.StartDate, (estimatedEndDate != null) ? DateTime.Parse(estimatedEndDate) : task.EstimatedEndDate, (finalDate != null) ? DateTime.Parse(finalDate) : task.FinalDate
                 , (taskNickname != null) ? taskNickname : task.TaskNickname, (remarks != null) ? remarks : task.Remarks, (products != null) ? products : task.Products);
             try
             {
@@ -229,14 +226,14 @@ namespace DalTest
             }
             while (action != 0);
         }
-
-        private static void dependencyCreate() {
-            Console.WriteLine("Please enter id, id previous task , id dependant task");          
+        private static void dependencyCreate()
+        {
+            Console.WriteLine("Please enter id, id previous task , id dependant task");
             string id = Console.ReadLine()!;
             string idPreviousTask = Console.ReadLine()!;
             string idDependantTask = Console.ReadLine()!;
 
-            Dependency newDependency = new(Convert.ToInt32(id) , Convert.ToInt32(idPreviousTask), Convert.ToInt32(idDependantTask));
+            Dependency newDependency = new(Convert.ToInt32(id), Convert.ToInt32(idPreviousTask), Convert.ToInt32(idDependantTask));
             try
             {
                 s_dalDependency!.Create(newDependency);
@@ -246,14 +243,16 @@ namespace DalTest
                 Console.WriteLine(e.Message);
             }
         }
-        private static void dependencyRead() {
+        private static void dependencyRead()
+        {
 
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
             Console.WriteLine(s_dalDependency?.Read(Convert.ToInt32(id)));
 
         }
-        private static void dependencyReadAll() {
+        private static void dependencyReadAll()
+        {
 
             List<Dependency> dependencies = s_dalDependency!.ReadAll();
             dependencies.ForEach(dependency => { Console.WriteLine(dependency); });
@@ -282,7 +281,8 @@ namespace DalTest
 
             }
         }
-        private static void dependencyDelete() {
+        private static void dependencyDelete()
+        {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
             try
@@ -329,10 +329,8 @@ namespace DalTest
             }
             while (action != 0);
         }
-        static void Main()
+        private static void mainMenue()
         {
-
-            Initialization.Do(s_dalTask, s_dalDependency, s_dalEngineer);
             int entity;
             do
             {
@@ -358,5 +356,13 @@ namespace DalTest
             }
             while (entity != 0);
         }
+        static void Main()
+        {
+
+            Initialization.Do(s_dalTask, s_dalDependency, s_dalEngineer);
+            mainMenue();
+            return;
+        }
+
     }
 }
