@@ -8,9 +8,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 public static class Initialization
 {
 
-    private static IDependency? s_dalDependency; 
-    private static IEngineer? s_dalEngineer; 
-    private static ITask? s_dalTask; 
+    private static IDal? s_dal;  
 
     private static readonly Random s_rand = new();
 
@@ -36,12 +34,12 @@ public static class Initialization
             int _id;
             do
                 _id = s_rand.Next(100000000, 1000000000);
-            while (s_dalEngineer!.Read(_id) != null);
+            while (s_dal!.Engineer.Read(_id) != null);
             string _email = engineerEmails[index+=1];
             EngineerExperience _level = (EngineerExperience)s_rand.Next(0, 5);
             double _saleryPerHour = 100 * ((int)_level+1);
             Engineer newEngineer = new(_id, _name, _level, _saleryPerHour, _email);
-            s_dalEngineer!.Create(newEngineer);
+            s_dal!.Engineer.Create(newEngineer);
         }
     }
 
@@ -60,7 +58,7 @@ public static class Initialization
             TimeSpan newSpan = new TimeSpan(0, s_rand.Next(0, (int)timeSpan.TotalMinutes), 0);
             DateTime _productionDate = date + newSpan;
             DateTime _deadline= _productionDate.AddDays(s_rand.Next(30,100));
-            List<Engineer> engineers= s_dalEngineer!.ReadAll();
+            List<Engineer> engineers= s_dal!.Engineer.ReadAll().ToList()!;
             EngineerExperience _difficulty = (EngineerExperience)s_rand.Next(0, 5);
             List<Engineer> qualifiedEngineers = engineers.FindAll((e) => e.Level >= _difficulty);
             int amountEngineers = qualifiedEngineers.Count;
@@ -71,7 +69,7 @@ public static class Initialization
                 _engineerId = qualifiedEngineers[randomEngineerNum].Id;
             }
             Task newTask = new(_id, _description, _productionDate, _deadline, _difficulty, _engineerId, _milestone);
-            s_dalTask!.Create(newTask);
+            s_dal!.Task.Create(newTask);
         }
     }
 
@@ -85,7 +83,7 @@ public static class Initialization
         int _idDependantTask;
         for (int i = 0; i < 40; i++) 
         {
-            List<Dependency> dependencies = s_dalDependency!.ReadAll();
+            List<Dependency> dependencies = s_dal!.Dependency.ReadAll().ToList()!;
             do
             {
                 _idPreviousTask = s_rand.Next(1, 16);
@@ -93,17 +91,15 @@ public static class Initialization
             } while (dependencies.Find((d) =>
                 (d.IdPreviousTask == _idPreviousTask &&d.IdDependantTask== _idDependantTask)) != null);
             Dependency newDependency = new(_id, _idPreviousTask, _idDependantTask);
-            s_dalDependency!.Create(newDependency);
+            s_dal!.Dependency.Create(newDependency);
         }
     }
     
 
 
-    public static void Do(ITask dalTask, IDependency dalDependency, IEngineer dalEngineer)
+    public static void Do(IDal dal)
     {
-        s_dalTask = dalTask ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalDependency = dalDependency ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
+        s_dal = dal ?? throw new NullReferenceException("DAL can not be null!");
         createDependencys();
         createEngineers();
         createTasks();

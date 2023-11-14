@@ -4,7 +4,7 @@ using DalApi;
 using DO;
 using System.Collections.Generic;
 
-public class DependencyImplementation : IDependency
+internal class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
     {
@@ -15,7 +15,10 @@ public class DependencyImplementation : IDependency
 
     public void Delete(int id)
     {
-        Dependency? dependency = DataSource.Dependencys.Find((d) => d.Id == id);
+        Dependency dependency = (from d in DataSource.Dependencys
+                          let dId = d.Id
+                          where dId == id
+                          select d).FirstOrDefault()!;
         if (dependency == null)
             throw new Exception("An object of type Dependency with such an ID does not exist");
         DataSource.Dependencys.Remove(dependency);
@@ -23,21 +26,42 @@ public class DependencyImplementation : IDependency
 
     public Dependency? Read(int id)
     {
-        Dependency? dependency = DataSource.Dependencys.Find((d) => d.Id == id);
+
+        Dependency dependency = (from d in DataSource.Dependencys
+                          let dId = d.Id
+                          where dId == id
+                          select d).FirstOrDefault()!;
         return dependency;
     }
 
-    public List<Dependency> ReadAll()
+/*    public List<Dependency> ReadAll()
     {
         return new List<Dependency>(DataSource.Dependencys);
-    }
+    }*/
 
     public void Update(Dependency item)
     {
-        Dependency? dependency = DataSource.Dependencys.Find((d) => d.Id == item.Id);
-        if(dependency==null)
+        Dependency dependency = (from d in DataSource.Dependencys
+                          let dId = d.Id
+                          where dId == item.Id
+                          select d).FirstOrDefault()!;
+        if (dependency==null)
             throw new Exception("An object of type Dependency with such an ID does not exist");
         DataSource.Dependencys.Remove(dependency);
         DataSource.Dependencys.Add(item);
     }
+
+
+        public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null) 
+        {
+            if (filter != null)
+            {
+                return from item in DataSource.Dependencys
+                       where filter(item)
+                       select item;
+            }
+            return from item in DataSource.Dependencys
+                   select item;
+        }
+
 }
