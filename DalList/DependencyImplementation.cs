@@ -20,7 +20,7 @@ internal class DependencyImplementation : IDependency
                           where dId == id
                           select d).FirstOrDefault()!;
         if (dependency == null)
-            throw new Exception("An object of type Dependency with such an ID does not exist");
+            throw new DalDoesNotExistException($"Dependency with ID={id} does not exists");
         DataSource.Dependencys.Remove(dependency);
     }
 
@@ -34,11 +34,6 @@ internal class DependencyImplementation : IDependency
         return dependency;
     }
 
-/*    public List<Dependency> ReadAll()
-    {
-        return new List<Dependency>(DataSource.Dependencys);
-    }*/
-
     public void Update(Dependency item)
     {
         Dependency dependency = (from d in DataSource.Dependencys
@@ -46,13 +41,19 @@ internal class DependencyImplementation : IDependency
                           where dId == item.Id
                           select d).FirstOrDefault()!;
         if (dependency==null)
-            throw new Exception("An object of type Dependency with such an ID does not exist");
+            throw new DalDoesNotExistException($"Dependency with ID={item.Id} does not exists");
         DataSource.Dependencys.Remove(dependency);
         DataSource.Dependencys.Add(item);
     }
+    public Dependency? Read(Func<Dependency, bool> filter)
+    {
 
+            return (from item in DataSource.Dependencys
+                    where filter(item)
+                    select item).FirstOrDefault();
 
-        public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null) 
+    }
+    public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null)
         {
             if (filter != null)
             {

@@ -19,7 +19,8 @@ internal class EngineerImplementation : IEngineer
             DataSource.Engineers.Add(item);
             return item.Id;
         }
-            throw new Exception("An object of type Engineer with such an ID already exists");
+        throw new DalAlreadyExistsException($"Engineer with ID={item.Id} already exists");
+
     }
 
     public void Delete(int id)
@@ -29,7 +30,7 @@ internal class EngineerImplementation : IEngineer
                         where eId == id
                         select e).FirstOrDefault()!;
         if (engineer == null) 
-            throw new Exception("An object of type Engineer with such an ID does not exist");
+            throw new DalDoesNotExistException($"Engineer with ID={id} does not exists");
         DataSource.Engineers.Remove(engineer);
     }
 
@@ -42,10 +43,6 @@ internal class EngineerImplementation : IEngineer
         return engineer;
     }
 
-/*    public List<Engineer> ReadAll()
-    {
-        return new List<Engineer>(DataSource.Engineers);
-    }*/
 
     public void Update(Engineer item)
     {
@@ -54,10 +51,18 @@ internal class EngineerImplementation : IEngineer
                         where eId == item.Id
                         select e).FirstOrDefault()!;
         if (engineer==null)
-            throw new Exception("An object of type Engineer with such an ID does not exist");
+            throw new DalDoesNotExistException($"Engineer with ID={item.Id} does not exists");
         DataSource.Engineers.Remove(engineer);
         DataSource.Engineers.Add(item);
     }
+
+    public Engineer? Read(Func<Engineer, bool> filter)
+    {
+            return (from item in DataSource.Engineers
+                    where filter(item)
+                    select item).FirstOrDefault();
+    }
+
     public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null)
     {
         if (filter != null)

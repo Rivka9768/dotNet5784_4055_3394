@@ -28,7 +28,7 @@ namespace DalTest
             {
                 s_dal.Engineer!.Create(newEngineer);
             }
-            catch (Exception e)
+            catch (DalAlreadyExistsException e)
             {
                 Console.WriteLine(e);
             }
@@ -73,7 +73,7 @@ namespace DalTest
             {
                 s_dal.Engineer!.Update(newEngineer);
             }
-            catch (Exception e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
 
@@ -91,7 +91,7 @@ namespace DalTest
             {
                 s_dal.Engineer!.Delete(Convert.ToInt32(id));
             }
-            catch (Exception e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
             }
@@ -158,16 +158,9 @@ namespace DalTest
             string? products = Console.ReadLine();
             DO.Task newTask = new(0, description, productionDate, deadline, (EngineerExperience)difficulty,
                 engineerId, milestone, startDate, estimatedEndDate, finalDate, taskNickname, remarks, products);
-            try
-            {
-                s_dal.Task!.Create(newTask);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            s_dal.Task!.Create(newTask);
         }
-        
+
         /// <summary>
         /// shows to the user detailes of a specific task
         /// </summary>
@@ -218,7 +211,7 @@ namespace DalTest
             {
                 s_dal.Task!.Update(newTask);
             }
-            catch (Exception e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
 
@@ -236,7 +229,7 @@ namespace DalTest
             {
                 s_dal.Task!.Delete(Convert.ToInt32(id));
             }
-            catch (Exception e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
             }
@@ -290,16 +283,9 @@ namespace DalTest
             int.TryParse(Console.ReadLine(), out int idPreviousTask);
             int.TryParse(Console.ReadLine(), out int idDependantTask);
             Dependency newDependency = new(0, idPreviousTask, idDependantTask);
-            try
-            {
-                s_dal.Dependency!.Create(newDependency);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            s_dal.Dependency!.Create(newDependency);
         }
-        
+
         /// <summary>
         /// shows to the user detailes of a specific dependency
         /// </summary>
@@ -341,7 +327,7 @@ namespace DalTest
             {
                 s_dal.Dependency!.Update(newDependency);
             }
-            catch (Exception e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
 
@@ -359,7 +345,7 @@ namespace DalTest
             {
                 s_dal.Dependency!.Delete(Convert.ToInt32(id));
             }
-            catch (Exception e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
             }
@@ -439,7 +425,7 @@ namespace DalTest
             try
             {
                 Initialization.Do(s_dal);
-            }catch(Exception e) 
+            }catch(NullReferenceException e) 
             { 
                 Console.WriteLine(e);    
             }

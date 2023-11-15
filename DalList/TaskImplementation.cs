@@ -21,7 +21,7 @@ internal class TaskImplementation : ITask
                         where tId == id
                         select t).FirstOrDefault()!;
         if (task == null)
-            throw new Exception("An object of type Task with such an ID does not exist");
+            throw new DalDoesNotExistException($"Task with ID={id} does not exists");
         DataSource.Tasks.Remove(task);
     }
 
@@ -34,10 +34,6 @@ internal class TaskImplementation : ITask
         return task;
     }
 
-/*    public List<Task> ReadAll()
-    {
-        return new List<Task>(DataSource.Tasks);
-    }*/
 
     public void Update(Task item)
     {
@@ -46,10 +42,18 @@ internal class TaskImplementation : ITask
                     where tId == item.Id
                     select t).FirstOrDefault()!;
         if (task == null) 
-            throw new Exception("An object of type Task with such an ID does not exist");
+            throw new DalDoesNotExistException($"Task with ID={item.Id} does not exists");
         DataSource.Tasks.Remove(task);
         DataSource.Tasks.Add(item);
     }
+
+    public Task? Read(Func<Task, bool> filter)
+    {
+            return (from item in DataSource.Tasks
+                    where filter(item)
+                    select item).FirstOrDefault();
+    }
+
     public IEnumerable<Task> ReadAll(Func<Task, bool>? filter = null)
     {
         if (filter != null)
