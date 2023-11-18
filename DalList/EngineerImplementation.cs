@@ -30,7 +30,7 @@ internal class EngineerImplementation : IEngineer
                         where eId == id
                         select e).FirstOrDefault()!;
         if (engineer == null) 
-            throw new DalDoesNotExistException($"Engineer with ID={id} does not exists");
+            throw new DalDeletionImpossible($"Can't delete Engineer with ID={id}");
         DataSource.Engineers.Remove(engineer);
     }
 

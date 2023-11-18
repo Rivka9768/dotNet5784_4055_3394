@@ -20,7 +20,7 @@ internal class DependencyImplementation : IDependency
                           where dId == id
                           select d).FirstOrDefault()!;
         if (dependency == null)
-            throw new DalDoesNotExistException($"Dependency with ID={id} does not exists");
+            throw new DalDeletionImpossible($"Can't delete Dependency with ID={id}");
         DataSource.Dependencys.Remove(dependency);
     }
 
