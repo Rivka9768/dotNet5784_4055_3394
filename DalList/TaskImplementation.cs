@@ -21,7 +21,7 @@ internal class TaskImplementation : ITask
                         where tId == id
                         select t).FirstOrDefault()!;
         if (task == null)
-            throw new DalDeletionImpossible($"Can't delete Task with ID={id}");
+            throw new DalDoesNotExistException($"Task with ID={id} does not exists");
         DataSource.Tasks.Remove(task);
     }
 

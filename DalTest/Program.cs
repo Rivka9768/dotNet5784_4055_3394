@@ -91,7 +91,7 @@ namespace DalTest
             {
                 s_dal.Engineer!.Delete(Convert.ToInt32(id));
             }
-            catch (DalDeletionImpossible e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
             }
@@ -229,7 +229,7 @@ namespace DalTest
             {
                 s_dal.Task!.Delete(Convert.ToInt32(id));
             }
-            catch (DalDeletionImpossible e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
             }
@@ -345,7 +345,7 @@ namespace DalTest
             {
                 s_dal.Dependency!.Delete(Convert.ToInt32(id));
             }
-            catch (DalDeletionImpossible e)
+            catch (DalDoesNotExistException e)
             {
                 Console.WriteLine(e);
             }
