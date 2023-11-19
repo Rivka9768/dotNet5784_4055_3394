@@ -15,4 +15,7 @@ public record Engineer
     EngineerExperience Level,
     double SaleryPerHour,
     string? Email=""
-);
+)
+{
+	public Engineer() : this(0,"",0,0) { } 
+}

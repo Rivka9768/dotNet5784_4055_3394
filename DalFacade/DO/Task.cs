@@ -31,7 +31,11 @@ DateTime? FinalDate = null,
 string? TaskNickname = "",
 string? Remarks = "",
 string? Products = ""
-);
+)
+{
+
+	public Task() : this(0,"",new DateTime(),new DateTime(),0) { } 
+}
 
 
 

@@ -9,7 +9,11 @@ namespace DO;
 /// <param name="IdDependantTask">the id of the dependant task</param>
 public record Dependency
 (
-  int Id, 
+  int Id,
   int IdPreviousTask,
   int IdDependantTask
-);
+)
+{
+	public Dependency() : this(0,0,0) { }
+
+}
