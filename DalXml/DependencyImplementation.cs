@@ -9,12 +9,24 @@ internal class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
     {
-        throw new NotImplementedException();
+        int id = XMLTools.GetAndIncreaseNextId("Config", "NextDependencyId");
+       List<Dependency> dependencies = XMLTools.LoadListFromXMLSerializer<Dependency>("dependencys");
+        dependencies.Add(item);
+        XMLTools.SaveListToXMLSerializer<Dependency>(dependencies, "dependencys");
+        return id;
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        List<Dependency> dependencies = XMLTools.LoadListFromXMLSerializer<Dependency>("dependencys");
+        Dependency dependency = (from d in dependencies
+                                 let dId = d.Id
+                                 where dId == id
+                                 select d).FirstOrDefault()!;
+        if (dependency == null)
+            throw new DalDoesNotExistException($"Dependency with ID={id} does not exists");
+        dependencies.Remove(dependency);
+        XMLTools.SaveListToXMLSerializer<Dependency>(dependencies, "dependencys");
     }
 
     public Dependency? Read(int id)
