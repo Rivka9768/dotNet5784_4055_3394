@@ -11,7 +11,7 @@ internal class DependencyImplementation : IDependency
     {
         int id = XMLTools.GetAndIncreaseNextId("Config", "NextDependencyId");
        List<Dependency> dependencies = XMLTools.LoadListFromXMLSerializer<Dependency>("dependencys");
-        dependencies.Add(item);
+        dependencies.Add(item: item with { Id = id });
         XMLTools.SaveListToXMLSerializer<Dependency>(dependencies, "dependencys");
         return id;
     }
