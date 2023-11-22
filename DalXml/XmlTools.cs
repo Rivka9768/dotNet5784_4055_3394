@@ -30,6 +30,16 @@ static class XMLTools
     #endregion
 
     #region XmlConfig
+/*    public static int GetAndIncreaseNextId(string data_config_xml, string elemName)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(data_config_xml);
+        int nextId = root.ToIntNullable(elemName)
+            ?? throw new FormatException($"can't convert id.  {data_config_xml}, {elemName}");
+        root.Element(elemName)?.SetValue((nextId + 1).ToString());
+        XMLTools.SaveListToXMLElement(root, data_config_xml);
+        return nextId;
+    }*/
+
     public static int GetAndIncreaseNextId(string data_config_xml, string elemName)
     {
         XElement root = XMLTools.LoadListFromXMLElement(data_config_xml);
@@ -77,7 +87,7 @@ static class XMLTools
     //public static void SaveListToXMLSerializer<T>(List<T?> list, string entity) where T : struct
     public static void SaveListToXMLSerializer<T>(List<T> list, string entity) where T : class
     {
-        string filePath = $"{s_xml_dir + entity}.xml";
+            string filePath = $"{s_xml_dir + entity}.xml";
         try
         {
             using FileStream file = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);

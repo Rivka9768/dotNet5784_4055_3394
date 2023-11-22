@@ -9,7 +9,7 @@ internal class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
     {
-        int id = XMLTools.GetAndIncreaseNextId("Config", "NextDependencyId");
+        int id = Config.NextDependencyId;
        List<Dependency> dependencies = XMLTools.LoadListFromXMLSerializer<Dependency>("dependencys");
         dependencies.Add(item: item with { Id = id });
         XMLTools.SaveListToXMLSerializer<Dependency>(dependencies, "dependencys");
