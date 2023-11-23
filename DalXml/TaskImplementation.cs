@@ -13,7 +13,7 @@ internal class TaskImplementation : ITask
     public int Create(DO.Task item)
     {
         XElement tasks = XMLTools.LoadListFromXMLElement("tasks");
-        int id = Config.NextTaskId;
+        int id = ((item.Id>0)?item.Id:Config.NextTaskId);
         XElement myTask = new("task",
             new XElement("Id", id),
             new XElement("Description", item.Description),
@@ -44,22 +44,24 @@ internal class TaskImplementation : ITask
 
     static DO.Task? getTask(XElement tempTask)
     {
-
-        return tempTask.ToIntNullable("Id") is null ? null : new DO.Task()
+        if (tempTask.ToIntNullable("Id") is null)
+            return null;
+        return  new DO.Task()
         {
             Id = (int)tempTask?.Element("Id")!,
             Description = (string)tempTask?.Element("Description")!,
             ProductionDate = (DateTime)tempTask?.Element("ProductionDate")!,
             Deadline = (DateTime)tempTask?.Element("Deadline")!,
-            Difficulty = (EngineerExperience)(int)tempTask?.Element("Difficulty")!,
+            //Difficulty = (EngineerExperience)(int)tempTask?.Element("Difficulty")!,
+            Difficulty = EngineerExperience.Novice,
             EngineerId = (int)tempTask?.Element("EngineerId")!,
             Milestone = (bool)tempTask?.Element("Milestone")!,
-            StartDate = (DateTime)tempTask?.Element("StartDate")!,
-            EstimatedEndDate = (DateTime)tempTask?.Element("EstimatedEndDate")!,
-            FinalDate = (DateTime)tempTask?.Element("FinalDate")!,
-            TaskNickname = (string)tempTask?.Element("TaskNickname")!,
-            Remarks = (string)tempTask?.Element("Remarks")!,
-            Products = (string)tempTask?.Element("Products")!,
+            StartDate = ((tempTask?.Element("StartDate"))!=null)? ((DateTime)tempTask?.Element("StartDate")!):(new DateTime()),
+            EstimatedEndDate = ((tempTask?.Element("EstimatedEndDate")) != null) ? ((DateTime)tempTask?.Element("EstimatedEndDate")!) : (new DateTime()),
+            FinalDate = ((tempTask?.Element("FinalDate")) != null) ? ((DateTime)tempTask?.Element("FinalDate")!) : (new DateTime()),
+            TaskNickname = ((tempTask?.Element("TaskNickname")) != null) ? ((string)tempTask?.Element("TaskNickname")!) : "",
+            Remarks = ((tempTask?.Element("Remarks")) != null) ? ((string)tempTask?.Element("Remarks")!) : "",
+            Products = ((tempTask?.Element("Products")) != null) ? ((string)tempTask?.Element("Products")!) : "",
         };
     }
 

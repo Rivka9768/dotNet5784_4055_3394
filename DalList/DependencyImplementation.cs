@@ -47,11 +47,9 @@ internal class DependencyImplementation : IDependency
     }
     public Dependency? Read(Func<Dependency, bool> filter)
     {
-
             return (from item in DataSource.Dependencys
                     where filter(item)
                     select item).FirstOrDefault();
-
     }
     public IEnumerable<Dependency> ReadAll(Func<Dependency, bool>? filter = null)
         {
