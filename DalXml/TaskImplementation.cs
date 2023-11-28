@@ -46,14 +46,16 @@ internal class TaskImplementation : ITask
     {
         if (tempTask.ToIntNullable("Id") is null)
             return null;
+        EngineerExperience tempDifficulty;
+        Enum.TryParse(tempTask?.Element("Difficulty").Value!, out tempDifficulty);
         return  new DO.Task()
         {
             Id = (int)tempTask?.Element("Id")!,
             Description = (string)tempTask?.Element("Description")!,
             ProductionDate = (DateTime)tempTask?.Element("ProductionDate")!,
             Deadline = (DateTime)tempTask?.Element("Deadline")!,
-            //Difficulty = (EngineerExperience)(int)tempTask?.Element("Difficulty")!,
-            Difficulty = EngineerExperience.Novice,
+            Difficulty= tempDifficulty,
+            //Difficulty = EngineerExperience.Novice,
             EngineerId = (int)tempTask?.Element("EngineerId")!,
             Milestone = (bool)tempTask?.Element("Milestone")!,
             StartDate = ((tempTask?.Element("StartDate"))!=null)? ((DateTime)tempTask?.Element("StartDate")!):(new DateTime()),

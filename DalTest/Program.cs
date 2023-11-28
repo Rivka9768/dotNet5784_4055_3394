@@ -204,9 +204,9 @@ namespace DalTest
             string? taskNickname = Console.ReadLine();
             string? remarks = Console.ReadLine();
             string? products = Console.ReadLine();
-            DO.Task newTask = new(task.Id, (description != "") ? description : task.Description, (productionDate != default(DateTime)) ?productionDate : task.ProductionDate, (deadline != default(DateTime)) ? deadline : task.Deadline,
+            DO.Task newTask = new(task.Id, (description != "") ? description : task.Description, (productionDate != DateTime.MinValue) ?productionDate : task.ProductionDate, (deadline != DateTime.MinValue) ? deadline : task.Deadline,
                 (difficulty!="") ? (EngineerExperience)(Convert.ToInt32(difficulty)) : task.Difficulty, (engineerId != "") ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != "") ? Convert.ToBoolean(milestone) : task.Milestone
-                , (startDate != default(DateTime)) ? startDate : task.StartDate, (estimatedEndDate != default(DateTime)) ? estimatedEndDate : task.EstimatedEndDate, (finalDate != default(DateTime)) ? finalDate : task.FinalDate
+                , (startDate != DateTime.MinValue) ? startDate : task.StartDate, (estimatedEndDate != DateTime.MinValue) ? estimatedEndDate : task.EstimatedEndDate, (finalDate != DateTime.MinValue) ? finalDate : task.FinalDate
                 , (taskNickname != "") ? taskNickname : task.TaskNickname, (remarks != "") ? remarks : task.Remarks, (products != "") ? products : task.Products);
             try
             {
