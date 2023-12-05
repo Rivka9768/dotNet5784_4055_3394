@@ -6,6 +6,11 @@ namespace Dal;
 
 internal class EngineerImplementation : IEngineer
 {
+    /// <summary>
+    /// creates a new engineer
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public int Create(Engineer item)
     {
         List<Engineer> engineers = XMLTools.LoadListFromXMLSerializer<Engineer>("engineers");
@@ -22,6 +27,11 @@ internal class EngineerImplementation : IEngineer
             throw new DalAlreadyExistsException($"Engineer with ID={item.Id} already exists");
     }
 
+    /// <summary>
+    /// delete a engineer
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Delete(int id)
     {
         List<Engineer> engineers = XMLTools.LoadListFromXMLSerializer<Engineer>("engineers");
@@ -34,7 +44,11 @@ internal class EngineerImplementation : IEngineer
         engineers.Remove(engineer);
         XMLTools.SaveListToXMLSerializer<Engineer>(engineers, "engineers");
     }
-
+    /// <summary>
+    /// find a engineer by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Engineer? Read(int id)
     {
         List<Engineer> engineers = XMLTools.LoadListFromXMLSerializer<Engineer>("engineers");
@@ -46,6 +60,11 @@ internal class EngineerImplementation : IEngineer
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// finds a engineer by a boolian condition
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public Engineer? Read(Func<Engineer, bool> filter)
     {
         List<Engineer> engineers = XMLTools.LoadListFromXMLSerializer<Engineer>("engineers");
@@ -53,7 +72,11 @@ internal class EngineerImplementation : IEngineer
                 where filter(item)
                 select item).FirstOrDefault();
     }
-
+    /// <summary>
+    /// returns all engineers which answers to the boolian condition or if the function is called with no parameters than returns all engineers
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<Engineer?> ReadAll(Func<Engineer, bool>? filter = null)
     {
         List<Engineer> engineers = XMLTools.LoadListFromXMLSerializer<Engineer>("engineers");
@@ -67,6 +90,11 @@ internal class EngineerImplementation : IEngineer
                select item;
     }
 
+    /// <summary>
+    /// updates a specific engineer
+    /// </summary>
+    /// <param name="item"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Update(Engineer item)
     {
         List<Engineer> engineers = XMLTools.LoadListFromXMLSerializer<Engineer>("engineers");

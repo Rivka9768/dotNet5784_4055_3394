@@ -7,6 +7,11 @@ using System.Collections.Generic;
 
 internal class TaskImplementation : ITask
 {
+    /// <summary>
+    /// creates a new task
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public int Create(Task item)
     {
         int id = DataSource.Config.NextTaskId;
@@ -14,6 +19,11 @@ internal class TaskImplementation : ITask
         return id;
     }
 
+    /// <summary>
+    /// delete a task
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Delete(int id)
     {
         Task task = (from t in DataSource.Tasks
@@ -24,7 +34,11 @@ internal class TaskImplementation : ITask
             throw new DalDoesNotExistException($"Task with ID={id} does not exists");
         DataSource.Tasks.Remove(task);
     }
-
+    /// <summary>
+    /// find a task by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Task? Read(int id)
     {
         Task task = (from t in DataSource.Tasks
@@ -35,6 +49,11 @@ internal class TaskImplementation : ITask
     }
 
 
+    /// <summary>
+    /// updates a specific task
+    /// </summary>
+    /// <param name="item"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Update(Task item)
     {
         Task task = (from t in DataSource.Tasks
@@ -47,13 +66,22 @@ internal class TaskImplementation : ITask
         DataSource.Tasks.Add(item);
     }
 
+    /// <summary>
+    /// finds a task by a boolian condition
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public Task? Read(Func<Task, bool> filter)
     {
             return (from item in DataSource.Tasks
                     where filter(item)
                     select item).FirstOrDefault();
     }
-
+    /// <summary>
+    /// returns all tasks which answers to the boolian condition or if the function is called with no parameters than returns all tasks
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<Task> ReadAll(Func<Task, bool>? filter = null)
     {
         if (filter != null)

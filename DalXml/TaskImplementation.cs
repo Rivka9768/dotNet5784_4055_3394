@@ -10,6 +10,11 @@ namespace Dal;
 
 internal class TaskImplementation : ITask
 {
+    /// <summary>
+    /// creates a new task
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public int Create(DO.Task item)
     {
         XElement tasks = XMLTools.LoadListFromXMLElement("tasks");
@@ -32,6 +37,12 @@ internal class TaskImplementation : ITask
         XMLTools.SaveListToXMLElement(tasks, "tasks");
         return id;
     }
+
+    /// <summary>
+    /// delete a task
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Delete(int id)
     {
         XElement tasks = XMLTools.LoadListFromXMLElement("tasks");
@@ -42,6 +53,11 @@ internal class TaskImplementation : ITask
         XMLTools.SaveListToXMLElement(tasks, "tasks");
     }
 
+    /// <summary>
+    /// this function is inorder to help me get the values which is in the task xml
+    /// </summary>
+    /// <param name="tempTask"></param>
+    /// <returns></returns>
     static DO.Task? getTask(XElement tempTask)
     {
         if (tempTask.ToIntNullable("Id") is null)
@@ -67,7 +83,11 @@ internal class TaskImplementation : ITask
         };
     }
 
-
+    /// <summary>
+    /// find a task by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public DO.Task? Read(int id)
     {
         XElement tasks = XMLTools.LoadListFromXMLElement("tasks");
@@ -76,18 +96,32 @@ internal class TaskImplementation : ITask
 /*        return getTask(tasks.Elements("task").FirstOrDefault(t => t.Element("Id")?.Value == id.ToString()));*/
     }
 
+    /// <summary>
+    /// finds a task by a boolian condition
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public DO.Task? Read(Func<DO.Task, bool> filter)
     {
         XElement tasks = XMLTools.LoadListFromXMLElement("tasks");
         return tasks.Elements().Select(s => getTask(s)).Where(filter!).FirstOrDefault();
     }
-
+    /// <summary>
+    /// returns all tasks which answers to the boolian condition or if the function is called with no parameters than returns all tasks
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<DO.Task?> ReadAll(Func<DO.Task, bool>? filter = null)
     {
         return (filter is null) ? XMLTools.LoadListFromXMLElement("tasks").Elements().Select(s => getTask(s))
             : XMLTools.LoadListFromXMLElement("tasks").Elements().Select(s => getTask(s)).Where(filter!);
     }
 
+    /// <summary>
+    /// updates a specific task
+    /// </summary>
+    /// <param name="item"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Update(DO.Task item)
     {
         Delete(item.Id);
