@@ -8,8 +8,9 @@ namespace DalTest
 {
     internal class Program
     {
-/*        static readonly IDal s_dal = new Dal.DalList();*/
-        static readonly IDal s_dal = new Dal.DalXml(); //stage 3
+        /*        static readonly IDal s_dal = new Dal.DalList(); //stage 2*/
+        /*        static readonly IDal s_dal = new Dal.DalXml(); //stage 3*/
+        static readonly IDal s_dal = Factory.Get; //stage 4
         public enum Entities { EXIT, ENGINEER, TASK, DEPENDENCY };
         public enum Actions { EXIT, CREATE, READ, READALL, UPDATE, DELETE };
         
