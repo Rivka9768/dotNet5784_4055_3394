@@ -15,7 +15,7 @@ public static class Initialization
     /// <summary>
     /// this function initializes engineers
     /// </summary>
-    private static void createEngineers()
+    private static void CreateEngineers()
     {
         string[] engineerNames =
         {
@@ -46,7 +46,7 @@ public static class Initialization
     /// <summary>
     /// this function initializes tasks
     /// </summary>
-    private static void createTasks()
+    private static void CreateTasks()
     {
         int _id = 0;
         bool _milestone = false;
@@ -76,7 +76,7 @@ public static class Initialization
     /// <summary>
     /// this function initializes dependencies
     /// </summary>
-    private static void createDependencys()
+    private static void CreateDependencys()
     {
         int _id = 0;
         int _idPreviousTask;
@@ -100,8 +100,8 @@ public static class Initialization
     public static void Do(IDal dal)
     {
         s_dal = dal ?? throw new NullReferenceException("DAL can not be null!");
-        createDependencys();
-        createEngineers();
-        createTasks();
+        CreateDependencys();
+        CreateEngineers();
+        CreateTasks();
     }
 }

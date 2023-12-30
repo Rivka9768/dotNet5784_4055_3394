@@ -8,16 +8,16 @@ namespace DalTest
 {
     internal class Program
     {
-        /*        static readonly IDal s_dal = new Dal.DalList(); //stage 2*/
-        /*        static readonly IDal s_dal = new Dal.DalXml(); //stage 3*/
-        static readonly IDal s_dal = Factory.Get; //stage 4
+        /*        private static readonly IDal s_dal = new Dal.DalList(); //stage 2*/
+        /*        private static readonly IDal s_dal = new Dal.DalXml(); //stage 3*/
+        private static readonly IDal s_dal = Factory.Get; //stage 4
         public enum Entities { EXIT, ENGINEER, TASK, DEPENDENCY };
         public enum Actions { EXIT, CREATE, READ, READALL, UPDATE, DELETE };
         
         /// <summary>
         /// creates a new engineer
         /// </summary>
-        private static void engineerCreate()
+        private static void EngineerCreate()
         {
             Console.WriteLine("Please enter id, name , level, salary per hour, email");
             int.TryParse(Console.ReadLine(), out int id);
@@ -39,7 +39,7 @@ namespace DalTest
         /// <summary>
         /// shows to the user detailes of a specific enginer
         /// </summary>
-        private static void engineerRead()
+        private static void EngineerRead()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -49,7 +49,7 @@ namespace DalTest
         /// <summary>
         /// shows to the user the details of all engineers
         /// </summary>
-        private static void engineerReadAll()
+        private static void EngineerReadAll()
         {
             List<Engineer> engineers = s_dal.Engineer!.ReadAll().ToList()!;
             engineers.ForEach(engineer => { Console.WriteLine(engineer); });
@@ -58,7 +58,7 @@ namespace DalTest
         /// <summary>
         /// updates custom details of a specific engineer
         /// </summary>
-        private static void engineerUpDate()
+        private static void EngineerUpDate()
         {
             Console.WriteLine("Please enter the id:");
             int.TryParse(Console.ReadLine(), out int id);
@@ -85,7 +85,7 @@ namespace DalTest
         /// <summary>
         /// deletes a specific enginner
         /// </summary>
-        private static void engineerDelete()
+        private static void EngineerDelete()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -102,7 +102,7 @@ namespace DalTest
         /// <summary>
         /// the engineer navigation menue
         /// </summary>
-        private static void engineerFunc()
+        private static void EngineerFunc()
         {
             int action;
             do
@@ -116,19 +116,19 @@ namespace DalTest
                     case Actions.EXIT:
                         return;
                     case Actions.CREATE:
-                        engineerCreate();
+                        EngineerCreate();
                         break;
                     case Actions.READ:
-                        engineerRead();
+                        EngineerRead();
                         break;
                     case Actions.READALL:
-                        engineerReadAll();
+                        EngineerReadAll();
                         break;
                     case Actions.UPDATE:
-                        engineerUpDate();
+                        EngineerUpDate();
                         break;
                     case Actions.DELETE:
-                        engineerDelete();
+                        EngineerDelete();
                         break;
                     default:
                         return;
@@ -142,7 +142,7 @@ namespace DalTest
         /// <summary>
         /// creates a new task
         /// </summary>
-        private static void taskCreate()
+        private static void TaskCreate()
         {
             Console.WriteLine("Please enter  description , production date, deadline, task dificulty, engineer id," +
                 " milestone, start date ,estimated end date, final date,task nickname, remarks,products:");
@@ -166,7 +166,7 @@ namespace DalTest
         /// <summary>
         /// shows to the user detailes of a specific task
         /// </summary>
-        private static void taskRead()
+        private static void TaskRead()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -176,7 +176,7 @@ namespace DalTest
         /// <summary>
         /// shows to the user the details of all tasks
         /// </summary>
-        private static void taskReadAll()
+        private static void TaskReadAll()
         {
             List<DO.Task> tasks = s_dal.Task!.ReadAll().ToList()!;
             tasks.ForEach(task => { Console.WriteLine(task) ; });
@@ -185,7 +185,7 @@ namespace DalTest
         /// <summary>
         /// updates custom details of a specific task
         /// </summary>
-        private static void taskUpDate()
+        private static void TaskUpDate()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -223,7 +223,7 @@ namespace DalTest
         /// <summary>
         /// deletes a specific task
         /// </summary>
-        private static void taskDelete() 
+        private static void TaskDelete() 
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -254,19 +254,19 @@ namespace DalTest
                     case Actions.EXIT:
                         return;
                     case Actions.CREATE:
-                        taskCreate();
+                        TaskCreate();
                         break;
                     case Actions.READ:
-                        taskRead();
+                        TaskRead();
                         break;
                     case Actions.READALL:
-                        taskReadAll();
+                        TaskReadAll();
                         break;
                     case Actions.UPDATE:
-                        taskUpDate();
+                        TaskUpDate();
                         break;
                     case Actions.DELETE:
-                        taskDelete();
+                        TaskDelete();
                         break;
                     default:
                         return;
@@ -279,7 +279,7 @@ namespace DalTest
         /// <summary>
         /// creates a new dependency
         /// </summary>
-        private static void dependencyCreate()
+        private static void DependencyCreate()
         {
             Console.WriteLine("Please enter  id of previous task , id of dependant task");
             int.TryParse(Console.ReadLine(), out int idPreviousTask);
@@ -291,7 +291,7 @@ namespace DalTest
         /// <summary>
         /// shows to the user detailes of a specific dependency
         /// </summary>
-        private static void dependencyRead()
+        private static void DependencyRead()
         {
 
             Console.WriteLine("Please enter the id:");
@@ -303,7 +303,7 @@ namespace DalTest
         /// <summary>
         /// shows to the user the details of all dependencies
         /// </summary>
-        private static void dependencyReadAll()
+        private static void DependencyReadAll()
         {
 
             List<Dependency> dependencies = s_dal.Dependency!.ReadAll().ToList()!;
@@ -314,7 +314,7 @@ namespace DalTest
         /// <summary>
         /// updates custom details of a specific dependency
         /// </summary>
-        private static void dependencyUpDate()
+        private static void DependencyUpDate()
         {
             Console.WriteLine("Please enter the id:");
             int.TryParse(Console.ReadLine(), out int id);
@@ -339,7 +339,7 @@ namespace DalTest
         /// <summary>
         /// deletes a specific dependency
         /// </summary>
-        private static void dependencyDelete()
+        private static void DependencyDelete()
         {
             Console.WriteLine("Please enter the id:");
             string id = Console.ReadLine()!;
@@ -370,19 +370,19 @@ namespace DalTest
                     case Actions.EXIT:
                         return;
                     case Actions.CREATE:
-                        dependencyCreate();
+                        DependencyCreate();
                         break;
                     case Actions.READ:
-                        dependencyRead();
+                        DependencyRead();
                         break;
                     case Actions.READALL:
-                        dependencyReadAll();
+                        DependencyReadAll();
                         break;
                     case Actions.UPDATE:
-                        dependencyUpDate();
+                        DependencyUpDate();
                         break;
                     case Actions.DELETE:
-                        dependencyDelete();
+                        DependencyDelete();
                         break;
                     default:
                         return;
@@ -395,7 +395,7 @@ namespace DalTest
         /// <summary>
         /// main navigation menue
         /// </summary>
-        private static void mainMenue()
+        private static void MainMenue()
         {
             int entity;
             do
@@ -408,7 +408,7 @@ namespace DalTest
                     case Entities.EXIT:
                         return;
                     case Entities.ENGINEER:
-                        engineerFunc();
+                        EngineerFunc();
                         break;
                     case Entities.TASK:
                         taskFunc();
@@ -432,7 +432,7 @@ namespace DalTest
                 Console.WriteLine(e);    
             }
 
-            mainMenue();
+            MainMenue();
             return;
         }
 
