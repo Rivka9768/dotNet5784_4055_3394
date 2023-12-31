@@ -13,8 +13,8 @@ public enum EngineerExperience
 
 public enum Status
 {
-    Unscheduled,
-    Scheduled,
-    OnTrack,
-    InJeopardy
+    Unscheduled,//doesn't yet have a start date
+    Scheduled,//has start date but not yet completed
+    OnTrack,//in progress after start date
+    InJeopardy//completed after the deadline
 }
