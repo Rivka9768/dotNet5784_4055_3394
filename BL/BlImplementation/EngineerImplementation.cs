@@ -1,7 +1,7 @@
 ﻿
 using BlApi;
 using BO;
-using DO;
+
 using System.Text.RegularExpressions;
 
 namespace BlImplementation;
@@ -73,7 +73,7 @@ internal class EngineerImplementation : IEngineer
         }
     }
 
-    public Engineer? Read(int id)
+    public BO.Engineer? Read(int id)
     {
         ///לעשות לפי חריגות מתאימות!!!
         DO.Engineer? engineer = _dal.Engineer.Read(id);
@@ -81,7 +81,7 @@ internal class EngineerImplementation : IEngineer
             throw new Exception();
         DO.Task? task = _dal.Task.Read(task => (task.EngineerId == id));
         BO.TaskInEngineer taskInEngineer = new BO.TaskInEngineer { Id=task.Id,TaskNickname= task.TaskNickname };
-        return new BO.Engineer(engineer.Id, engineer.Name, engineer.Level, engineer.SaleryPerHour, engineer.Email, taskInEngineer);
+        return new BO.Engineer {Id= engineer.Id,Name= engineer.Name,Level=(BO.EngineerExperience)(int)engineer.Level,SaleryPerHour= engineer.SaleryPerHour,Email= engineer.Email,Task= taskInEngineer };
     }
 
 

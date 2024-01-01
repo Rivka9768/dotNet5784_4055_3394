@@ -2,32 +2,17 @@
 
 using BlApi;
 using BO;
-using System.Diagnostics.Contracts;
+using DO;
 
 namespace BlImplementation;
 
 internal class TaskImplementation : ITask
 {
+    //האם duration של משימה הינו לפי הstart וend האמיתי או המשוער?????
     private DalApi.IDal _dal = DalApi.Factory.Get;
-    public void Create(BO.Task task)
-    {
-        if (task.Id <= 0)
-            //לשאול את המורה לגבי ה כינוי של ה task
-            throw new Exception();
 
-        throw new NotImplementedException();
-    }
-
-    public void Delete(int id)
+    private Status GetStatus(DO.Task task)
     {
-        throw new NotImplementedException();
-    }
-
-    public BO.Task? Read(int id)
-    {
-        DO.Task? task = _dal.Task.Read(id);
-        if (task == null)
-            throw new Exception();
         Status status = Status.Unscheduled;
         if (task.StartDate != null)
         {
@@ -42,19 +27,113 @@ internal class TaskImplementation : ITask
                     status = Status.OnTrack;
             }
         }
-        MilestoneInTask milestoneInTask = 
+        return status;
+    }
+    public void Create(BO.Task task)
+    {
+        if (task.Id <= 0)
+            //לשאול את המורה לגבי ה כינוי של ה task
+            throw new Exception();
+        DO.Task doTask = new(task.Id, task.Description, task.ProductionDate, task.Deadline, (DO.EngineerExperience)(int)task.Difficulty
+            , task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
+            , task.EstimatedStartDate, task.ActualStartDate, task.EstimatedEndDate, task.ActualEndDate, task.TaskNickname
+            , task.Remarks, task.Products);
+        try
+        {
+            _dal.Task.Create(doTask);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception();
+        }
+        while (task.DependenciesList!=null)
+        {
+            DO.Dependency dependency = new(0, task.DependenciesList.First().Id, task.Id);
+            _dal.Dependency.Create(dependency);
+            task.DependenciesList.RemoveAt(0);
+        }
 
+    }
 
+    public void Delete(int id)
+    {
+        if (_dal.Task.Read(id) == null)
+            throw new Exception();
+        if (_dal.Dependency.ReadAll().ToList().Find(d => d.IdDependantTask == id) != null)
+            throw new Exception();
+        try
+        {
+            _dal.Task.Delete(id);
+        }
+        catch (Exception e)
+        {
+            throw new Exception();
+        }
+    }
 
+    public BO.Task? Read(int id)
+    {
+        DO.Task? task = _dal.Task.Read(id);
+        if (task == null)
+            throw new Exception();
+
+        Status status = GetStatus(task);
+
+        MilestoneInTask milestoneInTask = (from d in _dal.Dependency.ReadAll()
+                                           let IdPreviousTask = d.IdPreviousTask
+                                           where IdPreviousTask == id && (_dal.Task.Read(d.IdDependantTask)!.Milestone == true)
+                                           select new MilestoneInTask { Id = d.IdDependantTask, MilestoneNickname = _dal.Task.Read(d.IdDependantTask)!.TaskNickname }).FirstOrDefault()!;
+        List<TaskInList>? DependenciesList = (from d in _dal.Dependency.ReadAll()
+                                              let IdDependantTask = d.IdDependantTask
+                                              where IdDependantTask == id
+                                              select new TaskInList { Id = d.IdPreviousTask, TaskNickname = _dal.Task.Read(d.IdPreviousTask)!.TaskNickname, Description = _dal.Task.Read(d.IdPreviousTask)!.Description, Status = GetStatus(_dal.Task.Read(d.IdPreviousTask)) }).ToList();
+        EngineerInTask? engineerInTask = (task.EngineerId) != null ? (new EngineerInTask { Id = (int)task.EngineerId, Name = _dal.Engineer.Read((int)task.EngineerId)!.Name }) : null;
+        return new BO.Task
+        {
+            Id = task.Id,
+            TaskNickname = task.TaskNickname,
+            Description = task.Description,
+            ProductionDate = task.ProductionDate,
+            Status = status,
+            DependenciesList = DependenciesList,
+            Milestone = milestoneInTask,
+            EstimatedStartDate = task.EstimatedStartDate,
+            //מה עם משך הזמן של המשימה???
+            ActualStartDate = task.StartDate,
+            EstimatedEndDate = task.EstimatedEndDate,
+            Deadline = task.Deadline,
+            ActualEndDate = task.FinalDate,
+            Products = task.Products,
+            Remarks = task.Remarks,
+            Engineer = engineerInTask,
+            Difficulty = (BO.EngineerExperience)(int)task.Difficulty,
+        };
     }
 
     public IEnumerable<BO.Task?> ReadAll(Func<BO.Task, bool>? filter = null)
     {
-        throw new NotImplementedException();
+        return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task, bool>?)filter).ToList()
+                select Read(doTask.Id));
     }
 
     public void Update(BO.Task task)
     {
-        throw new NotImplementedException();
+
+        //נתונים ibput לעשות וולידצית 
+        DO.Task doTask = new(task.Id, task.Description, task.ProductionDate,
+             task.Deadline, (DO.EngineerExperience)(int)task.Difficulty, task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
+           , task.EstimatedStartDate, task.ActualStartDate, task.EstimatedEndDate, task.ActualEndDate
+           , task.TaskNickname, task.Remarks, task.Products);
+        try
+        {
+            _dal.Task.Update(doTask);
+        }
+        catch (Exception e)
+        {
+            throw new Exception();
+        }
+
+        // task.DependenciesList
+        //האם להתיחס למערך התלויות
     }
 }

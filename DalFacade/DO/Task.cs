@@ -16,6 +16,8 @@ namespace DO;
 /// <param name="Remarks">remarks on the task</param>
 /// <param name="EngineerId">the id of the engineer dealing with the task</param>
 /// <param name="Difficulty">the task's level of difficulty</param>
+/// <param name="Duration">Estimated time for doing the task</param>
+/// <param name="EstimatedStartDate">the task's Estimated start date</param>
 public record Task
 (
 int Id ,
@@ -25,6 +27,8 @@ DateTime Deadline,
 EngineerExperience Difficulty,
 int? EngineerId = null,
 bool ?Milestone = false,
+TimeSpan? Duration = null,	
+DateTime? EstimatedStartDate = null,
 DateTime? StartDate=null,
 DateTime? EstimatedEndDate=null,
 DateTime? FinalDate = null,
