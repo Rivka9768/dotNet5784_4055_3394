@@ -27,7 +27,7 @@ public class Milestone
     public DateTime? EstimatedEndDate { get; set; }
     public DateTime Deadline { get; set; }
     public DateTime? ActualEndDate { get; set; }
-    public double progressPercentage { get; set; }  
+    public double ProgressPercentage { get; set; }  
     public string? Remarks { set; get; }
     public List<TaskInList>? DependenciesList { get; set; }
 }
