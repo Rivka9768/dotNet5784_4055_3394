@@ -69,7 +69,7 @@ internal class MilestonImplementation : IMilestone
     public Milestone Update(Milestone milestone)
     {
         if (milestone == null)
-           throw new  BO.BlNullPropertyException("can not update a null milestone")
+            throw new BO.BlNullPropertyException("can not update a null milestone");
         DO.Task? task = _dal.Task.Read(milestone.Id);
         if (task == null || task.Milestone == false)
             throw new BO.BlDoesNotExistException($"milestone with Id={milestone.Id} does not exist");
