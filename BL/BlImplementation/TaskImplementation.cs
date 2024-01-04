@@ -29,23 +29,16 @@ internal class TaskImplementation : ITask
         return status;
     }
     public void Create(BO.Task task)
-    {
+    { //למה צריך לבדוק id זה בכלל מספר רץ
         if (task.Id <= 0)
             //לשאול את המורה לגבי ה כינוי של ה task
-            throw new Exception();
+            throw new BlInValidInput("the details are invalid");
         DO.Task doTask = new(task.Id, task.Description, task.ProductionDate, task.Deadline, (DO.EngineerExperience)(int)task.Difficulty
             , task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
             , task.EstimatedStartDate, task.ActualStartDate, task.EstimatedEndDate, task.ActualEndDate, task.TaskNickname
             , task.Remarks, task.Products);
-        try
-        {
-            _dal.Task.Create(doTask);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception();
-        }
-        while (task.DependenciesList!=null)
+        _dal.Task.Create(doTask);
+        while (task.DependenciesList != null)
         {
             DO.Dependency dependency = new(0, task.DependenciesList.First().Id, task.Id);
             _dal.Dependency.Create(dependency);
@@ -57,16 +50,16 @@ internal class TaskImplementation : ITask
     public void Delete(int id)
     {
         if (_dal.Task.Read(id) == null)
-            throw new Exception();
+            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exists");
         if (_dal.Dependency.ReadAll().ToList().Find(d => d.IdDependantTask == id) != null)
-            throw new Exception();
+            throw new BlDeletionImpossible($"can not delete task with Id={id}");
         try
         {
             _dal.Task.Delete(id);
         }
-        catch (Exception e)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception();
+            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exists",ex);
         }
     }
 
@@ -74,8 +67,7 @@ internal class TaskImplementation : ITask
     {
         DO.Task? task = _dal.Task.Read(id);
         if (task == null)
-            throw new Exception();
-
+            new BO.BlDoesNotExistException($"Task with ID={id} does not exists");
         Status status = GetStatus(task);
 
         MilestoneInTask milestoneInTask = (from d in _dal.Dependency.ReadAll()
@@ -127,9 +119,10 @@ internal class TaskImplementation : ITask
         {
             _dal.Task.Update(doTask);
         }
-        catch (Exception e)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception();
+            throw new BO.BlDoesNotExistException($"Task with ID={task.Id} does not exists",ex);
+
         }
 
         // task.DependenciesList

@@ -39,16 +39,17 @@ internal class EngineerImplementation : IEngineer
     public void Create(BO.Engineer engineer)
     {
         if (!ValidateInput(engineer))
-            throw new Exception();
+            throw new BlInValidInput("the details are invalid");
         DO.Engineer newEngineer = new(engineer.Id, engineer.Name, (DO.EngineerExperience)(int)engineer.Level, engineer.SaleryPerHour, engineer.Email);
         try
         {
             _dal.Engineer.Create(newEngineer);
         }
-        catch (Exception e)
+        catch (DO.DalAlreadyExistsException ex)
         {
-            throw new Exception();
+            throw new BO.BlAlreadyExistsException($"Engineer with ID={engineer.Id} already exists", ex);
         }
+
     }
 
 
@@ -61,15 +62,15 @@ internal class EngineerImplementation : IEngineer
         {
             DO.Task? task = _dal.Task.Read(taskInEngineer!.Id);
                 if (task != null&&(task.FinalDate <= DateTime.Now || task.StartDate <= DateTime.Now))
-                    throw new Exception();
+                    throw new BlDeletionImpossible($"can not delete engineer with Id={id}");
         }
         try
         {
             _dal.Engineer.Delete(id);
         }
-        catch (Exception e)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception();
+            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists",ex);
         }
     }
 
@@ -78,7 +79,7 @@ internal class EngineerImplementation : IEngineer
         ///לעשות לפי חריגות מתאימות!!!
         DO.Engineer? engineer = _dal.Engineer.Read(id);
         if (engineer == null)
-            throw new Exception();
+            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists");
         DO.Task? task = _dal.Task.Read(task => (task.EngineerId == id));
         BO.TaskInEngineer taskInEngineer = new BO.TaskInEngineer { Id=task.Id,TaskNickname= task.TaskNickname };
         return new BO.Engineer {Id= engineer.Id,Name= engineer.Name,Level=(BO.EngineerExperience)(int)engineer.Level,SaleryPerHour= engineer.SaleryPerHour,Email= engineer.Email,Task= taskInEngineer };
@@ -103,15 +104,16 @@ internal class EngineerImplementation : IEngineer
     public void Update(Engineer engineer)
     {
         if (!ValidateInput(engineer))
-            throw new Exception();
+            throw new BlInValidInput("the details are invalid");
         DO.Engineer newEngineer = new(engineer.Id, engineer.Name, (DO.EngineerExperience)(int)engineer.Level, engineer.SaleryPerHour, engineer.Email);
         try
         {
             _dal.Engineer.Update(newEngineer);
         }
-        catch (Exception e)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception();
+            throw new BO.BlDoesNotExistException($"Engineer with ID={engineer.Id} does not exists", ex);
+
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace BlApi;
 
-public interface IBI
+public interface IBl
 {
    
     public IEngineer Engineer { get; }

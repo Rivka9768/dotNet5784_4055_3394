@@ -40,8 +40,8 @@ internal class MilestonImplementation : IMilestone
     public Milestone? Read(int id)
     {
         DO.Task? task = _dal.Task.Read(id);
-        if (task == null || task.Milestone==false)
-            throw new Exception();
+        if (task == null || task.Milestone == false)
+            throw new BO.BlDoesNotExistException($"milestone with Id={id} does not exist");
         List<TaskInList>? taskInList = (from d in _dal.Dependency.ReadAll()
                                            let IdDependantTask = d.IdDependantTask
                                            where IdDependantTask == id
@@ -65,8 +65,26 @@ internal class MilestonImplementation : IMilestone
         };
 }
 
+    //האם הupdate אמור לקבל רק  id?
     public Milestone Update(Milestone milestone)
     {
-        
+        if (milestone == null)
+           throw new  BO.BlNullPropertyException("can not update a null milestone")
+        DO.Task? task = _dal.Task.Read(milestone.Id);
+        if (task == null || task.Milestone == false)
+            throw new BO.BlDoesNotExistException($"milestone with Id={milestone.Id} does not exist");
+        //האם יש דרך יותר סבירה לעדכן רק כמה שדות???
+        DO.Task? updatedTask= new(task.Id, (milestone.Description!=null)? milestone.Description:task.Description, task.ProductionDate, task.Deadline, task.Difficulty
+            , task.EngineerId, task.Milestone, task.Duration
+            , task.EstimatedStartDate, task.StartDate, task.EstimatedEndDate, task.FinalDate, (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname: task.TaskNickname
+            , (milestone.Remarks != null) ? milestone.Remarks:task.Remarks, task.Products);
+        try
+        {
+            _dal.Task.Update(updatedTask);
+        }catch(DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"milestone with Id={milestone.Id} does not exist",ex);
+        }
+        return milestone;
     }
 }
