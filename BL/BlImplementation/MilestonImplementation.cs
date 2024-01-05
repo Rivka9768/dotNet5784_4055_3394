@@ -73,11 +73,15 @@ internal class MilestonImplementation : IMilestone
         DO.Task? task = _dal.Task.Read(milestone.Id);
         if (task == null || task.Milestone == false)
             throw new BO.BlDoesNotExistException($"milestone with Id={milestone.Id} does not exist");
+        //האם זה תקין???
+        DO.Task? updatedTask = new DO.Task { Description = (milestone.Description != null) ? milestone.Description : task.Description,
+            TaskNickname = (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname : task.TaskNickname, 
+            Remarks = (milestone.Remarks != null) ? milestone.Remarks : task.Remarks };
         //האם יש דרך יותר סבירה לעדכן רק כמה שדות???
-        DO.Task? updatedTask= new(task.Id, (milestone.Description!=null)? milestone.Description:task.Description, task.ProductionDate, task.Deadline, task.Difficulty
-            , task.EngineerId, task.Milestone, task.Duration
-            , task.EstimatedStartDate, task.StartDate, task.EstimatedEndDate, task.FinalDate, (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname: task.TaskNickname
-            , (milestone.Remarks != null) ? milestone.Remarks:task.Remarks, task.Products);
+        /* DO.Task? updatedTask= new(task.Id, (milestone.Description!=null)? milestone.Description:task.Description, task.ProductionDate, task.Deadline, task.Difficulty
+             , task.EngineerId, task.Milestone, task.Duration
+             , task.EstimatedStartDate, task.StartDate, task.EstimatedEndDate, task.FinalDate, (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname: task.TaskNickname
+             , (milestone.Remarks != null) ? milestone.Remarks:task.Remarks, task.Products);*/
         try
         {
             _dal.Task.Update(updatedTask);
