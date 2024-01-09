@@ -18,16 +18,18 @@ namespace PL.Engineer
     /// <summary>
     /// Interaction logic for EngineerListWindow.xaml
     /// </summary>
-    
+
     public partial class EngineerListWindow : Window
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.All;
         public EngineerListWindow()
         {
             InitializeComponent();
             var temp = s_bl?.Engineer.ReadAll();
             EngineerList = temp == null ? new() : new(temp);
         }
+        //השתמשנו בengineer ולא בengineer in list...
         public ObservableCollection<BO.Engineer> EngineerList
         {
             get { return (ObservableCollection<BO.Engineer>)GetValue(EngineerListProperty); }
@@ -36,5 +38,13 @@ namespace PL.Engineer
 
         public static readonly DependencyProperty EngineerListProperty =
             DependencyProperty.Register("EngineerList", typeof(ObservableCollection<BO.Engineer>), typeof(EngineerListWindow), new PropertyMetadata(null));
+
+        private void ExperienceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var tempEngineerList = Experience == BO.EngineerExperience.All ?
+                        s_bl?.Engineer.ReadAll() :
+                        s_bl?.Engineer.ReadAll(engineer => engineer.Level == Experience);
+            EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
+        }
     }
 }

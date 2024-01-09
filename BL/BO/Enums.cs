@@ -8,7 +8,8 @@ public enum EngineerExperience
     AdvancedBeginner,
     Competent,
     Proficient,
-    Expert
+    Expert,
+    All
 }
 
 public enum Status

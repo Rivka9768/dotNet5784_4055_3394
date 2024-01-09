@@ -61,8 +61,8 @@ internal class EngineerImplementation : IEngineer
         if (taskInEngineer != null)
         {
             DO.Task? task = _dal.Task.Read(taskInEngineer!.Id);
-                if (task != null&&(task.FinalDate <= DateTime.Now || task.StartDate <= DateTime.Now))
-                    throw new BlDeletionImpossible($"can not delete engineer with Id={id}");
+            if (task != null && (task.FinalDate <= DateTime.Now || task.StartDate <= DateTime.Now))
+                throw new BlDeletionImpossible($"can not delete engineer with Id={id}");
         }
         try
         {
@@ -70,7 +70,7 @@ internal class EngineerImplementation : IEngineer
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists",ex);
+            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists", ex);
         }
     }
 
@@ -81,24 +81,37 @@ internal class EngineerImplementation : IEngineer
         if (engineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists");
         DO.Task? task = _dal.Task.Read(task => (task.EngineerId == id));
-        BO.TaskInEngineer taskInEngineer = new BO.TaskInEngineer { Id=task.Id,TaskNickname= task.TaskNickname };
-        return new BO.Engineer {Id= engineer.Id,Name= engineer.Name,Level=(BO.EngineerExperience)(int)engineer.Level,SaleryPerHour= engineer.SaleryPerHour,Email= engineer.Email,Task= taskInEngineer };
+        BO.TaskInEngineer taskInEngineer = new BO.TaskInEngineer { Id = task.Id, TaskNickname = task.TaskNickname };
+        return new BO.Engineer { Id = engineer.Id, Name = engineer.Name, Level = (BO.EngineerExperience)(int)engineer.Level, SaleryPerHour = engineer.SaleryPerHour, Email = engineer.Email, Task = taskInEngineer };
     }
 
 
     public IEnumerable<BO.Engineer> ReadAll(Func<BO.Engineer, bool>? filter = null)
     {
-        return (from DO.Engineer doEngineer in _dal.Engineer.ReadAll((Func<DO.Engineer, bool>?)filter).ToList()
-                select new BO.Engineer
-                {
-                    Id = doEngineer.Id,
-                    Name = doEngineer.Name,
-                    Email = doEngineer.Email,
-                    Level = (BO.EngineerExperience)(int)doEngineer.Level,
-                    SaleryPerHour = doEngineer.SaleryPerHour,
-                    Task = ReadTaskInEngineer(doEngineer.Id)
+        /*        return from DO.Engineer doEngineer in _dal.Engineer.ReadAll((Func<DO.Engineer, bool>?)filter).ToList()
+                        select new BO.Engineer
+                        {
+                            Id = doEngineer.Id,
+                            Name = doEngineer.Name,
+                            Email = doEngineer.Email,
+                            Level = (BO.EngineerExperience)(int)doEngineer.Level,
+                            SaleryPerHour = doEngineer.SaleryPerHour,
+                            Task = ReadTaskInEngineer(doEngineer.Id)
 
-                });
+                        };*/
+        List<BO.Engineer> boEngineers= (from DO.Engineer doEngineer in _dal.Engineer.ReadAll()
+                                                                   select new BO.Engineer
+                                                                   {
+                                                                       Id = doEngineer.Id,
+                                                                       Name = doEngineer.Name,
+                                                                       Email = doEngineer.Email,
+                                                                       Level = (BO.EngineerExperience)(int)doEngineer.Level,
+                                                                       SaleryPerHour = doEngineer.SaleryPerHour,
+                                                                       Task = ReadTaskInEngineer(doEngineer.Id)
+
+                                                                   }).ToList();
+        return  (filter != null)?  boEngineers.Where(bEngineer => filter!(bEngineer)): boEngineers;
+
     }
 
     public void Update(Engineer engineer)

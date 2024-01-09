@@ -8,7 +8,7 @@
         Title="EngineerListWindow" Height="640" Width="800"
    	    DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
-        <!--Extrnal Grid-->
+    <!--Extrnal Grid-->
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
@@ -21,9 +21,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Label" Grid.Column="0"/>
-            <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            </ComboBox>
+            <Label Content="Select Engineer Experience:" Grid.Column="0"/>
+            <ComboBox SelectedValue="{Binding Experience, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ExperienceSelector_SelectionChanged"/>
+            
         </Grid>
         <ListView   Margin="5" Grid.Row="1" ItemsSource="{Binding EngineerList}"></ListView>
         <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>

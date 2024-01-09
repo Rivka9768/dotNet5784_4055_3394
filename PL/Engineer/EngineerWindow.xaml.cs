@@ -19,9 +19,15 @@ namespace PL.Engineer
     /// </summary>
     public partial class EngineerWindow : Window
     {
+        public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.Novice;
         public EngineerWindow()
         {
             InitializeComponent();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
