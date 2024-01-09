@@ -20,16 +20,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalXml", "DalXml\DalXml.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xml", "xml", "{7D51F568-24FA-4282-A843-69F12E17E963}"
 	ProjectSection(SolutionItems) = preProject
-		xml\data-config.xml = xml\data-config.xml
 		xml\dal-config.xml = xml\dal-config.xml
+		xml\data-config.xml = xml\data-config.xml
 		xml\dependencys.xml = xml\dependencys.xml
 		xml\engineers.xml = xml\engineers.xml
 		xml\tasks.xml = xml\tasks.xml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{25573759-8997-4945-A05F-7F44167DECD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{25573759-8997-4945-A05F-7F44167DECD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlTest", "BlTest\BlTest.csproj", "{DACDD299-B119-4FB2-8389-14BEEE84D891}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlTest", "BlTest\BlTest.csproj", "{DACDD299-B119-4FB2-8389-14BEEE84D891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PL", "PL\PL.csproj", "{30E1E863-256A-46C6-B5C5-0E70FA427B12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{DACDD299-B119-4FB2-8389-14BEEE84D891}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DACDD299-B119-4FB2-8389-14BEEE84D891}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DACDD299-B119-4FB2-8389-14BEEE84D891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30E1E863-256A-46C6-B5C5-0E70FA427B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E1E863-256A-46C6-B5C5-0E70FA427B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E1E863-256A-46C6-B5C5-0E70FA427B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E1E863-256A-46C6-B5C5-0E70FA427B12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

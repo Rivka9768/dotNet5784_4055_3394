@@ -152,6 +152,8 @@ namespace DalTest
             int.TryParse(Console.ReadLine(), out int difficulty);
             int.TryParse(Console.ReadLine(), out int engineerId);
             bool.TryParse(Console.ReadLine(), out bool milestone);
+            TimeSpan.TryParse(Console.ReadLine(), out TimeSpan duration);
+            DateTime.TryParse(Console.ReadLine(), out DateTime estimatedStartDate);
             DateTime.TryParse(Console.ReadLine(), out DateTime startDate);
             DateTime.TryParse(Console.ReadLine(), out DateTime estimatedEndDate);
             DateTime.TryParse(Console.ReadLine(), out DateTime finalDate);
@@ -159,7 +161,7 @@ namespace DalTest
             string? remarks = Console.ReadLine();
             string? products = Console.ReadLine();
             DO.Task newTask = new(0, description, productionDate, deadline, (EngineerExperience)difficulty,
-                engineerId, milestone, startDate, estimatedEndDate, finalDate, taskNickname, remarks, products);
+                engineerId, milestone, duration,estimatedStartDate,startDate, estimatedEndDate, finalDate, taskNickname, remarks, products);
             s_dal.Task!.Create(newTask);
         }
 
@@ -199,6 +201,8 @@ namespace DalTest
             string? difficulty = Console.ReadLine();
             string? engineerId = Console.ReadLine();
             string? milestone = Console.ReadLine();
+            TimeSpan.TryParse(Console.ReadLine(), out TimeSpan duration);
+            DateTime.TryParse(Console.ReadLine(), out DateTime estimatedStartDate);
             DateTime.TryParse(Console.ReadLine(), out DateTime startDate);
             DateTime.TryParse(Console.ReadLine(), out DateTime estimatedEndDate);
             DateTime.TryParse(Console.ReadLine(), out DateTime finalDate);
@@ -207,7 +211,7 @@ namespace DalTest
             string? products = Console.ReadLine();
             DO.Task newTask = new(task.Id, (description != "") ? description : task.Description, (productionDate != DateTime.MinValue) ?productionDate : task.ProductionDate, (deadline != DateTime.MinValue) ? deadline : task.Deadline,
                 (difficulty!="") ? (EngineerExperience)(Convert.ToInt32(difficulty)) : task.Difficulty, (engineerId != "") ? Convert.ToInt32(engineerId) : task.EngineerId, (milestone != "") ? Convert.ToBoolean(milestone) : task.Milestone
-                , (startDate != DateTime.MinValue) ? startDate : task.StartDate, (estimatedEndDate != DateTime.MinValue) ? estimatedEndDate : task.EstimatedEndDate, (finalDate != DateTime.MinValue) ? finalDate : task.FinalDate
+                , (duration != TimeSpan.Zero) ? duration : task.Duration,(estimatedStartDate != DateTime.MinValue) ? estimatedStartDate : task.StartDate,(startDate != DateTime.MinValue) ? startDate : task.StartDate, (estimatedEndDate != DateTime.MinValue) ? estimatedEndDate : task.EstimatedEndDate, (finalDate != DateTime.MinValue) ? finalDate : task.FinalDate
                 , (taskNickname != "") ? taskNickname : task.TaskNickname, (remarks != "") ? remarks : task.Remarks, (products != "") ? products : task.Products);
             try
             {
