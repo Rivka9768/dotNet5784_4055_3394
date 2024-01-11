@@ -5,24 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Engineer"
         mc:Ignorable="d"
-        Title="EngineerWindow" Height="450" Width="800">
+        Title="EngineerWindow" Height="450" Width="800"
+        DataContext="{Binding CurrentEngineer, RelativeSource={RelativeSource Mode=self}, Mode=TwoWay}">
+
     <Grid>
         <Label Content="ID:" HorizontalAlignment="Left" Margin="126,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
-
         <Label Content="NAME:" HorizontalAlignment="Left" Margin="126,86,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
         <Label Content="LEVEL:" HorizontalAlignment="Left" Margin="126,106,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
         <Label Content="SALERY PER HOUR:" HorizontalAlignment="Left" Margin="126,126,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
         <Label Content="EMAIL:" HorizontalAlignment="Left" Margin="126,146,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
         <Label Content="TASK ID:" HorizontalAlignment="Left" Margin="126,166,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
         <Label Content="TASK NICKNAME:" HorizontalAlignment="Left" Margin="126,186,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.915,0.466" Width="115" Height="26"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="289,66,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="289,86,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
-        <ComboBox SelectedValue="{Binding Experience, Mode=TwoWay}" HorizontalAlignment="Left" Height="26" Margin="289,106,0,0" VerticalAlignment="Top" Width="189" SelectionChanged="ComboBox_SelectionChanged"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="289,126,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="289,146,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="289,166,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="289,186,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
-        <Button Content="Button" HorizontalAlignment="Center" Height="44" Margin="0,347,0,0" VerticalAlignment="Top" Width="188"/>
+        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" HorizontalAlignment="Left" Height="26" Margin="289,66,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" HorizontalAlignment="Left" Height="26" Margin="289,86,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
+        <ComboBox  ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}"  SelectedValue="{Binding Level, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" HorizontalAlignment="Left" Height="26" Margin="289,106,0,0" VerticalAlignment="Top" Width="189" SelectionChanged="ComboBox_SelectionChanged"/>
+        <TextBox Text="{Binding SaleryPerHour, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" HorizontalAlignment="Left" Height="26" Margin="289,126,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox Text="gfxiycvugou" HorizontalAlignment="Left" Height="26" Margin="289,146,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Task.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" HorizontalAlignment="Left" Height="26" Margin="289,166,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Task.TaskNickname, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" HorizontalAlignment="Left" Height="26" Margin="289,186,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="189" RenderTransformOrigin="0.5,0.5"/>
+        <Button Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}"  HorizontalAlignment="Center" Height="44" Margin="0,347,0,0" VerticalAlignment="Top" Width="188" Click="AddUpdate_Click"/>
 
     </Grid>
 </Window>

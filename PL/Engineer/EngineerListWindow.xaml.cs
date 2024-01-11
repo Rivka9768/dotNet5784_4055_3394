@@ -21,7 +21,7 @@ namespace PL.Engineer
 
     public partial class EngineerListWindow : Window
     {
-        static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+        private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.All;
         public EngineerListWindow()
         {
@@ -45,6 +45,11 @@ namespace PL.Engineer
                         s_bl?.Engineer.ReadAll() :
                         s_bl?.Engineer.ReadAll(engineer => engineer.Level == Experience);
             EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
+        }
+
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            new EngineerWindow(0).ShowDialog();
         }
     }
 }

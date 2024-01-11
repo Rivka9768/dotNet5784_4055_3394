@@ -17,17 +17,43 @@ namespace PL.Engineer
     /// <summary>
     /// Interaction logic for EngineerWindow.xaml
     /// </summary>
+  
     public partial class EngineerWindow : Window
     {
+        private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.Novice;
-        public EngineerWindow()
+
+
+        public BO.Engineer CurrentEngineer
+        {
+            get { return (BO.Engineer)GetValue(CurrentEngineerProperty); }
+
+            set { SetValue(CurrentEngineerProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CurrentEngineerProperty =
+            DependencyProperty.Register("CurrentCurrentEngineer", typeof(BO.Engineer), typeof(EngineerWindow), new PropertyMetadata(null));
+
+
+        public EngineerWindow(int currentId=0)
         {
             InitializeComponent();
+            CurrentEngineer = (currentId == 0) ? new () : s_bl.Engineer.Read(currentId);
+            //איך להשתמש עם חריגות ואיך לומר אם הוא נל????
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void AddUpdate_Click(object sender, RoutedEventArgs e)
+        {
+
+            s_bl.Engineer.Create(CurrentEngineer);
+            Console.ReadLine();
+           
         }
     }
 }
