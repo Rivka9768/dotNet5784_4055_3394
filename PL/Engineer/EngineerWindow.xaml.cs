@@ -24,6 +24,18 @@ namespace PL.Engineer
         public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.Novice;
 
 
+
+        //public int MyProperty
+        //{
+        //    get { return (int)GetValue(MyPropertyProperty); }
+        //    set { SetValue(MyPropertyProperty, value); }
+        //}
+
+        //// Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty MyPropertyProperty =
+        //    DependencyProperty.Register("MyProperty", typeof(int), typeof(ownerclass), new PropertyMetadata(0));
+
+
         public BO.Engineer CurrentEngineer
         {
             get { return (BO.Engineer)GetValue(CurrentEngineerProperty); }
@@ -33,7 +45,7 @@ namespace PL.Engineer
 
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CurrentEngineerProperty =
-            DependencyProperty.Register("CurrentCurrentEngineer", typeof(BO.Engineer), typeof(EngineerWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("CurrentEngineer", typeof(BO.Engineer), typeof(EngineerWindow), new PropertyMetadata(null));
 
 
         public EngineerWindow(int currentId=0)
