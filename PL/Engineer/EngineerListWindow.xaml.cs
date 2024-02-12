@@ -26,7 +26,8 @@ namespace PL.Engineer
         public EngineerListWindow()
         {
             InitializeComponent();
-            var temp = s_bl?.Engineer.ReadAll();
+            var temp = s_bl?.Engineer.ReadAll().ToList();
+            temp.ForEach(e => e.ToString());
             EngineerList = temp == null ? new() : new(temp);
         }
         //השתמשנו בengineer ולא בengineer in list...
@@ -49,7 +50,20 @@ namespace PL.Engineer
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            new EngineerWindow(0).ShowDialog();
+            new EngineerWindow().ShowDialog();
+   /*         InitializeComponent();*/
+            var tempEngineerList = s_bl?.Engineer.ReadAll();
+            EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
+        }
+
+        private void Update_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BO.Engineer? engineerInlist = (sender as ListView)?.SelectedItem as BO.Engineer;
+            if(engineerInlist!=null)
+                new EngineerWindow(engineerInlist!.Id).ShowDialog();
+            InitializeComponent();
+            var tempEngineerList = s_bl?.Engineer.ReadAll();
+            EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
         }
     }
 }

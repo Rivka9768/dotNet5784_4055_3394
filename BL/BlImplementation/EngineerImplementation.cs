@@ -33,7 +33,7 @@ internal class EngineerImplementation : IEngineer
         TaskInEngineer? taskInEngineer = (from t in tasks
                                           let engineerId = t.EngineerId
                                           where engineerId == id
-                                          select new TaskInEngineer { Id = id, TaskNickname = t.TaskNickname }).FirstOrDefault();
+                                          select new TaskInEngineer { Id = t.Id, TaskNickname = t.TaskNickname }).FirstOrDefault();
         return taskInEngineer;
     }
     public void Create(BO.Engineer engineer)
@@ -51,9 +51,6 @@ internal class EngineerImplementation : IEngineer
         }
 
     }
-
-
-
 
     public void Delete(int id)
     {
@@ -81,7 +78,9 @@ internal class EngineerImplementation : IEngineer
         if (engineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists");
         DO.Task? task = _dal.Task.Read(task => (task.EngineerId == id));
-        BO.TaskInEngineer taskInEngineer = new BO.TaskInEngineer { Id = task.Id, TaskNickname = task.TaskNickname };
+        BO.TaskInEngineer? taskInEngineer = null;
+        if (task != null)
+           taskInEngineer = new BO.TaskInEngineer { Id = task.Id, TaskNickname = task.TaskNickname };
         return new BO.Engineer { Id = engineer.Id, Name = engineer.Name, Level = (BO.EngineerExperience)(int)engineer.Level, SaleryPerHour = engineer.SaleryPerHour, Email = engineer.Email, Task = taskInEngineer };
     }
 

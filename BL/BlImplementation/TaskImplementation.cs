@@ -10,7 +10,7 @@ internal class TaskImplementation : ITask
     //האם duration של משימה הינו לפי הstart וend האמיתי או המשוער?????
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
-    private Status GetStatus(DO.Task task)
+    private static Status GetStatus(DO.Task task)
     {
         Status status = Status.Unscheduled;
         if (task.StartDate != null)
@@ -59,7 +59,7 @@ internal class TaskImplementation : ITask
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exists",ex);
+            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exists", ex);
         }
     }
 
@@ -67,9 +67,8 @@ internal class TaskImplementation : ITask
     {
         DO.Task? task = _dal.Task.Read(id);
         if (task == null)
-            new BO.BlDoesNotExistException($"Task with ID={id} does not exists");
+            throw new BO.BlDoesNotExistException($"Task with ID={id} does not exists");
         Status status = GetStatus(task);
-
         MilestoneInTask milestoneInTask = (from d in _dal.Dependency.ReadAll()
                                            let IdPreviousTask = d.IdPreviousTask
                                            where IdPreviousTask == id && (_dal.Task.Read(d.IdDependantTask)!.Milestone == true)
@@ -101,15 +100,39 @@ internal class TaskImplementation : ITask
         };
     }
 
-    public IEnumerable<BO.Task?> ReadAll(Func<BO.Task, bool>? filter = null)
+    /*    public IEnumerable<BO.Task?> ReadAll(Func<BO.Task, bool>? filter = null)
+        {
+            return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task, bool>?)filter).ToList()
+                    select Read(doTask.Id));
+        }*/
+    public IEnumerable<BO.TaskInList?> ReadAll(Func<BO.Task, bool>? filter = null)
     {
-        return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task, bool>?)filter).ToList()
-                select Read(doTask.Id));
+        List<BO.Task> boTasks = (from DO.Task doTask in _dal.Task.ReadAll()
+                                 select new BO.Task
+                                 {
+                                     Id = doTask.Id,
+                                     TaskNickname = doTask.TaskNickname,
+                                     Description = doTask.Description,
+                                     ProductionDate = doTask.ProductionDate,
+                                     Status = GetStatus(doTask),
+                                     DependenciesList = null,
+                                     Milestone = null,
+                                     EstimatedStartDate = doTask.EstimatedStartDate,
+                                     //מה עם משך הזמן של המשימה???
+                                     ActualStartDate = doTask.StartDate,
+                                     EstimatedEndDate = doTask.EstimatedEndDate,
+                                     Deadline = doTask.Deadline,
+                                     ActualEndDate = doTask.FinalDate,
+                                     Products = doTask.Products,
+                                     Remarks = doTask.Remarks,
+                                     Engineer = null,
+                                     Difficulty = (BO.EngineerExperience)(int)doTask.Difficulty,
+                                 }).ToList();
+       return (filter != null) ? boTasks.Where(bTask => filter!(bTask)).Select(bTask=>new BO.TaskInList { Id = bTask.Id, TaskNickname = bTask.TaskNickname, Description = bTask.Description, Status = bTask.Status }).ToList()
+            : boTasks.Select(bTask=>new BO.TaskInList { Id = bTask.Id, TaskNickname = bTask.TaskNickname, Description = bTask.Description, Status = bTask.Status }).ToList();
     }
-
     public void Update(BO.Task task)
     {
-
         //נתונים ibput לעשות וולידצית 
         DO.Task doTask = new(task.Id, task.Description, task.ProductionDate,
              task.Deadline, (DO.EngineerExperience)(int)task.Difficulty, task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
@@ -121,7 +144,7 @@ internal class TaskImplementation : ITask
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"Task with ID={task.Id} does not exists",ex);
+            throw new BO.BlDoesNotExistException($"Task with ID={task.Id} does not exists", ex);
 
         }
 

@@ -8,9 +8,11 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <!--Button to show list if all engineers-->
-        <Button Content="Handle Engineers" HorizontalAlignment="Left" Height="60" Margin="43,180,0,0" VerticalAlignment="Top" Width="206" Click="EngineersList_Click"/>
+        <Button Content="Handle Engineers" HorizontalAlignment="Left" Height="60" Margin="156,0,0,0" VerticalAlignment="Center" Width="206" Click="EngineersList_Click"/>
         <!--Button to show list if all engineers-->
-        <Button Content="Initialize All Data" HorizontalAlignment="Left" Height="25" Margin="448,185,0,0" VerticalAlignment="Top" Width="206" Click="Initialize_Click"/>
+        <Button Content="Handle Tasks" HorizontalAlignment="Left" Height="60" Margin="428,0,0,0" VerticalAlignment="Center" Width="206" Click="TaskList_Click"/>
+        <!--Button to show list if all engineers-->
+        <Button Content="Initialize All Data" HorizontalAlignment="Center" Height="25" Margin="0,125,0,0" VerticalAlignment="Top" Width="206" Click="Initialize_Click"/>
 
     </Grid>
 </Window>

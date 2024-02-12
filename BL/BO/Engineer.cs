@@ -19,5 +19,11 @@ public class Engineer
     public double SaleryPerHour { get; set; }
     public string? Email { get; set; }
     public TaskInEngineer? Task { get; set; }
+    public override string ToString()
+    {
+        return "ID: " + Id + "\nName: " + Name + "\nEmail: " + Email + "\nLevel: " + Level + "\nSalary Per Hour: " + SaleryPerHour + "\nEnginner's Task: " + ((Task != null) ? Task!.ToString() : "no task\n");
+    }
 }
+
+
 

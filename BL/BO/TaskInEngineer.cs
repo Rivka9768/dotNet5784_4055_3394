@@ -1,4 +1,6 @@
 ﻿
+using System.Xml.Linq;
+
 namespace BO;
 /// <summary>
 /// TaskInEngineer entity which describes tasks related to a specific engineer 
@@ -9,4 +11,9 @@ public class TaskInEngineer
 {
     public int Id { get; set; }
     public string? TaskNickname { get; set; }
+    public override string ToString()
+    {
+        return "\tID: " + Id 
+            + "\tAlias " + TaskNickname+"\n";
+    }
 }

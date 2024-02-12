@@ -1,5 +1,6 @@
 ﻿using DalApi;
 using PL.Engineer;
+using PL.Task;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,11 @@ namespace PL
             {
                 DalTest.Initialization.Do(Factory.Get);
             }
+        }
+
+        private void TaskList_Click(object sender, RoutedEventArgs e)
+        {
+            new TaskListWindow().Show();
         }
     }
 }
