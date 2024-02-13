@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PL.Engineer"
+        xmlns:local="clr-namespace:PL.Task"
         mc:Ignorable="d"
         Title="TaskWindow" Height="450" Width="800"
-        DataContext="{Binding CurrentEngineer, RelativeSource={RelativeSource Mode=self}, Mode=TwoWay}">
+        DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Mode=self}, Mode=TwoWay}">
 
     <Grid Margin="50,50,50,50">
         <Grid.ColumnDefinitions>
@@ -22,38 +22,56 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Label Content="ID:" Grid.Column="0" Grid.Row="0"/>
         <Label Content="TASK NICKNAME:" Grid.Column="0" Grid.Row="1"/>
         <Label Content="DESCRIPTION:" Grid.Column="0" Grid.Row="2"/>
         <Label Content="ProductionDate:" Grid.Column="0" Grid.Row="3"/>
         <Label Content="Status:" Grid.Column="0" Grid.Row="4"/>
-        <Label Content="DependenciesList:" Grid.Column="0" Grid.Row="5"/>
-        <Label Content="Milestone:" Grid.Column="0" Grid.Row="6"/>
-        <Label Content="EstimatedStartDate:" Grid.Column="0" Grid.Row="7"/>
-        <Label Content="ActualStartDate:" Grid.Column="0" Grid.Row="8"/>
-        <Label Content="EstimatedEndDate:" Grid.Column="0" Grid.Row="9"/>
-        <Label Content="Deadline:" Grid.Column="0" Grid.Row="10"/>
-        <Label Content="ActualEndDate:" Grid.Column="0" Grid.Row="11"/>
-        <Label Content="Products:" Grid.Column="0" Grid.Row="12"/>
-        <Label Content="Remarks:" Grid.Column="0" Grid.Row="13"/>
-        <Label Content="Engineer:" Grid.Column="0" Grid.Row="14"/>
-        <Label Content="Difficulty:" Grid.Column="0" Grid.Row="15"/>
-        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="0"/>
+        <!--<Label Content="DependenciesList:" Grid.Column="0" Grid.Row="5"/>
+        <Label Content="Milestone:" Grid.Column="0" Grid.Row="6"/>-->
+        <Label Content="EstimatedStartDate:" Grid.Column="0" Grid.Row="5"/>
+        <Label Content="ActualStartDate:" Grid.Column="0" Grid.Row="6"/>
+        <Label Content="EstimatedEndDate:" Grid.Column="0" Grid.Row="7"/>
+        <Label Content="Deadline:" Grid.Column="0" Grid.Row="8"/>
+        <Label Content="ActualEndDate:" Grid.Column="0" Grid.Row="9"/>
+        <Label Content="Products:" Grid.Column="0" Grid.Row="10"/>
+        <Label Content="Remarks:" Grid.Column="0" Grid.Row="11"/>
+        <Label Content="Engineer Id:" Grid.Column="0" Grid.Row="12"/>
+        <Label Content="Engineer Name:" Grid.Column="0" Grid.Row="13"/>
+        <Label Content="Difficulty:" Grid.Column="0" Grid.Row="14"/>
+        
+        <TextBox IsEnabled="False" Text="{Binding Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="0"/>
         <TextBox Text="{Binding TaskNickname, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="1"/>
         <!--<ComboBox  ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}"  SelectedValue="{Binding Level, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="2" />-->
         <TextBox Text="{Binding Description, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="2"/>
-        <ComboBox  ItemsSource="{Binding Source={StaticResource StatusCollectionKey}}"  SelectedValue="{Binding Status, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="3" />
-        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding DependenciesList, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="4"/>
-        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Milestone.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="5"/>
-        <TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Milestone.MilestoneNickname, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="6"/>
-        <D  Text="{Binding EstimatedStartDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="7"/>
-        <DatePicker  Text="{Binding ActualStartDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="7"/>
-        <DatePicker  Text="{Binding EstimatedStartDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="7"/>
-        <DatePicker  Text="{Binding EstimatedStartDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="7"/>
+        <DatePicker  Text="{Binding ProductionDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="3"/>
+        <ComboBox IsEnabled="False" ItemsSource="{Binding Source={StaticResource StatusCollectionKey}}"  SelectedValue="{Binding Status, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="4" />
+        <!--<TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding DependenciesList, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="4"/>-->
+        <!--<TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Milestone.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="5"/>-->
+        <!--<TextBox IsEnabled="{Binding Id, Mode=OneTime, Converter={StaticResource ConvertTyptBtnToEnableKey}}" Text="{Binding Milestone.MilestoneNickname, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="6"/>-->
+        <DatePicker  Text="{Binding EstimatedStartDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="5"/>
+        <DatePicker  Text="{Binding ActualStartDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="6"/>
+        <DatePicker  Text="{Binding EstimatedEndDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="7"/>
+        <DatePicker  Text="{Binding Deadline, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="8"/>
+        <DatePicker  Text="{Binding ActualEndDate, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="9"/>
+        <TextBox Text="{Binding Products, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="10"/>
+        <TextBox Text="{Binding Remarks, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="11"/>
+        <TextBox Text="{Binding Engineer.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="12"/>
+        <TextBox Text="{Binding Engineer.Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="13"/>
+        <ComboBox  ItemsSource="{Binding Source={StaticResource ExperienceCollectionKey}}"  SelectedValue="{Binding EngineerExperience, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Grid.Column="1" Grid.Row="14" />
 
 
-        <Button Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}" Grid.ColumnSpan="2" Grid.Row="16" Click="AddUpdate_Click"/>
+
+        <Button Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}" Grid.ColumnSpan="2" Grid.Row="15" Click="AddUpdate_Click"/>
 
     </Grid>
 

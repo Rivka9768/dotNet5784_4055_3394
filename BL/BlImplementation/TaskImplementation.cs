@@ -28,11 +28,29 @@ internal class TaskImplementation : ITask
         }
         return status;
     }
+
     public void Create(BO.Task task)
-    { //למה צריך לבדוק id זה בכלל מספר רץ
-        if (task.Id <= 0)
-            //לשאול את המורה לגבי ה כינוי של ה task
+
+    { 
+
+        if(task.EstimatedStartDate!=null&&(((task.EstimatedEndDate != null)&&task.EstimatedStartDate>task.EstimatedEndDate)||((task.ActualEndDate!=null)&& task.EstimatedStartDate>task.ActualEndDate)))
             throw new BlInValidInput("the details are invalid");
+        if (task.ActualStartDate != null && (((task.EstimatedEndDate != null) && task.ActualStartDate > task.EstimatedEndDate) || ((task.ActualEndDate != null) && task.ActualStartDate > task.ActualEndDate)))
+            throw new BlInValidInput("the details are invalid"); 
+        if (task.ActualEndDate != null && (((task.EstimatedStartDate != null) && task.ActualEndDate < task.EstimatedStartDate) || ((task.ActualStartDate != null) && task.ActualEndDate < task.ActualStartDate)))
+            throw new BlInValidInput("the details are invalid");
+        if (task.EstimatedEndDate != null && (((task.EstimatedStartDate != null) && task.EstimatedEndDate < task.EstimatedStartDate) ||((task.ActualStartDate != null) && task.EstimatedEndDate < task.ActualStartDate)))
+            throw new BlInValidInput("the details are invalid");
+        if(task.ProductionDate==null||((task.ActualStartDate!=null)&& task.ProductionDate>task.ActualStartDate)||((task.EstimatedStartDate!=null)&&task.ProductionDate>task.EstimatedStartDate)||((task.ActualEndDate!=null)&& task.ProductionDate>task.ActualEndDate)|| ((task.EstimatedEndDate!=null)&&task.ProductionDate>task.EstimatedEndDate)|| task.ProductionDate>task.Deadline)
+            throw new BlInValidInput("the details are invalid");
+        if (task.Deadline == null || ((task.ActualStartDate != null) && task.Deadline< task.ActualStartDate) || ((task.EstimatedStartDate != null) && task.Deadline < task.EstimatedStartDate) || ((task.ActualEndDate != null) && task.Deadline < task.ActualEndDate) || ((task.EstimatedEndDate != null) && task.Deadline < task.EstimatedEndDate) || task.Deadline < task.ProductionDate)
+            throw new BlInValidInput("the details are invalid");
+
+        //דחחוף ולידציההההההההה
+        //למה צריך לבדוק id זה בכלל מספר רץ
+        /*        if (task.Id <= 0)
+                    //לשאול את המורה לגבי ה כינוי של ה task
+                    throw new BlInValidInput("the details are invalid");*/
         DO.Task doTask = new(task.Id, task.Description, task.ProductionDate, task.Deadline, (DO.EngineerExperience)(int)task.Difficulty
             , task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
             , task.EstimatedStartDate, task.ActualStartDate, task.EstimatedEndDate, task.ActualEndDate, task.TaskNickname
@@ -100,11 +118,7 @@ internal class TaskImplementation : ITask
         };
     }
 
-    /*    public IEnumerable<BO.Task?> ReadAll(Func<BO.Task, bool>? filter = null)
-        {
-            return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task, bool>?)filter).ToList()
-                    select Read(doTask.Id));
-        }*/
+  
     public IEnumerable<BO.TaskInList?> ReadAll(Func<BO.Task, bool>? filter = null)
     {
         List<BO.Task> boTasks = (from DO.Task doTask in _dal.Task.ReadAll()
@@ -147,8 +161,5 @@ internal class TaskImplementation : ITask
             throw new BO.BlDoesNotExistException($"Task with ID={task.Id} does not exists", ex);
 
         }
-
-        // task.DependenciesList
-        //האם להתיחס למערך התלויות
     }
 }

@@ -1,4 +1,4 @@
-﻿using PL.Engineer;
+﻿using PL.Task;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -64,7 +64,19 @@ namespace PL.Task
             new TaskWindow().ShowDialog();
             /*         InitializeComponent();*/
             var tempTaskList = s_bl?.Task.ReadAll();
-           TaskList = tempTaskList == null ? new() : new(tempTaskList!);
+            TaskList = tempTaskList == null ? new() : new(tempTaskList!);
+        }
+
+        private void Update_SelectionChanged(object sender, MouseButtonEventArgs m)
+        {
+            
+                BO.TaskInList? taskInlist = (sender as ListView)?.SelectedItem as BO.TaskInList;
+                if (taskInlist != null)
+                    new TaskWindow(taskInlist!.Id).ShowDialog();
+                InitializeComponent();
+                var temptaskInlist = s_bl?.Task.ReadAll();
+                TaskList = temptaskInlist == null ? new() : new(temptaskInlist);
+           
         }
     }
 }

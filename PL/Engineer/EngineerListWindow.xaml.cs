@@ -56,7 +56,7 @@ namespace PL.Engineer
             EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
         }
 
-        private void Update_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Update_SelectionChanged(object sender, MouseButtonEventArgs e)
         {
             BO.Engineer? engineerInlist = (sender as ListView)?.SelectedItem as BO.Engineer;
             if(engineerInlist!=null)
