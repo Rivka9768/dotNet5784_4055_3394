@@ -23,23 +23,14 @@ namespace PL.Task
     {
         private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.Status Status { get; set; } = BO.Status.All;
+
         public TaskListWindow()
         {
             InitializeComponent();
+
             var temp = s_bl?.Task.ReadAll().ToList();
-            temp.ForEach(t => t.ToString());
             TaskList = temp == null ? new() : new(temp);
         }
-        /* public ObservableCollection<BO.TaskInList> TaskList
-         {
-             get { return (ObservableCollection<BO.TaskInList>)GetValue(TaskListProperty); }
-             set { SetValue(TaskListProperty, value); }
-         }
-
-         public static readonly DependencyProperty TaskListProperty =
-             DependencyProperty.Register("TaskList", typeof(ObservableCollection<BO.TaskInList>), typeof(TaskListWindow), new PropertyMetadata(null));
- */
-
 
         public ObservableCollection<BO.TaskInList> TaskList
         {
@@ -62,9 +53,9 @@ namespace PL.Task
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             new TaskWindow().ShowDialog();
-            /*         InitializeComponent();*/
-            var tempTaskList = s_bl?.Task.ReadAll();
-            TaskList = tempTaskList == null ? new() : new(tempTaskList!);
+
+            var temp = s_bl?.Task.ReadAll().ToList();
+            TaskList = temp == null ? new() : new(temp);
         }
 
         private void Update_SelectionChanged(object sender, MouseButtonEventArgs m)
@@ -73,10 +64,10 @@ namespace PL.Task
                 BO.TaskInList? taskInlist = (sender as ListView)?.SelectedItem as BO.TaskInList;
                 if (taskInlist != null)
                     new TaskWindow(taskInlist!.Id).ShowDialog();
-                InitializeComponent();
-                var temptaskInlist = s_bl?.Task.ReadAll();
-                TaskList = temptaskInlist == null ? new() : new(temptaskInlist);
-           
+
+            var temp = s_bl?.Task.ReadAll().ToList();
+            TaskList = temp == null ? new() : new(temp);
+
         }
     }
 }

@@ -30,15 +30,14 @@ namespace PL.Engineer
             temp.ForEach(e => e.ToString());
             EngineerList = temp == null ? new() : new(temp);
         }
-        //השתמשנו בengineer ולא בengineer in list...
-        public ObservableCollection<BO.Engineer> EngineerList
+        public ObservableCollection<BO.EngineerInList> EngineerList
         {
-            get { return (ObservableCollection<BO.Engineer>)GetValue(EngineerListProperty); }
+            get { return (ObservableCollection<BO.EngineerInList>)GetValue(EngineerListProperty); }
             set { SetValue(EngineerListProperty, value); }
         }
 
         public static readonly DependencyProperty EngineerListProperty =
-            DependencyProperty.Register("EngineerList", typeof(ObservableCollection<BO.Engineer>), typeof(EngineerListWindow), new PropertyMetadata(null));
+            DependencyProperty.Register("EngineerList", typeof(ObservableCollection<BO.EngineerInList>), typeof(EngineerListWindow), new PropertyMetadata(null));
 
         private void ExperienceSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -58,7 +57,7 @@ namespace PL.Engineer
 
         private void Update_SelectionChanged(object sender, MouseButtonEventArgs e)
         {
-            BO.Engineer? engineerInlist = (sender as ListView)?.SelectedItem as BO.Engineer;
+            BO.EngineerInList? engineerInlist = (sender as ListView)?.SelectedItem as BO.EngineerInList;
             if(engineerInlist!=null)
                 new EngineerWindow(engineerInlist!.Id).ShowDialog();
             InitializeComponent();

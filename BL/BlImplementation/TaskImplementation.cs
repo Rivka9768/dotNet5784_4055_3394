@@ -7,7 +7,6 @@ namespace BlImplementation;
 
 internal class TaskImplementation : ITask
 {
-    //האם duration של משימה הינו לפי הstart וend האמיתי או המשוער?????
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
     private static Status GetStatus(DO.Task task)
@@ -15,8 +14,7 @@ internal class TaskImplementation : ITask
         Status status = Status.Unscheduled;
         if (task.StartDate != null)
         {
-            //לשאול את המורה מזה אומר בסיכון
-            if (task.FinalDate > task.Deadline || DateTime.Now > task.Deadline)
+            if (task.FinalDate != null && (((DateTime)task.FinalDate).AddDays(4)>= task.Deadline))
                 status = Status.InJeopardy;
             else
             {
@@ -29,28 +27,35 @@ internal class TaskImplementation : ITask
         return status;
     }
 
+    private bool ValidateInput(BO.Task task)
+    {   
+        if(task.Description=="" )
+            return false;
+        if (task.EstimatedStartDate != DateTime.MinValue && (((task.EstimatedEndDate != DateTime.MinValue) && task.EstimatedStartDate > task.EstimatedEndDate) || ((task.ActualEndDate != DateTime.MinValue) && task.EstimatedStartDate > task.ActualEndDate)))
+            return false;
+        if (task.ActualStartDate != DateTime.MinValue && (((task.EstimatedEndDate != null) && task.ActualStartDate > task.EstimatedEndDate) || ((task.ActualEndDate != DateTime.MinValue) && task.ActualStartDate > task.ActualEndDate)))
+            return false;
+        if (task.ActualEndDate != DateTime.MinValue && (((task.EstimatedStartDate != DateTime.MinValue) && task.ActualEndDate < task.EstimatedStartDate) || ((task.ActualStartDate != DateTime.MinValue) && task.ActualEndDate < task.ActualStartDate)))
+            return false;
+        if (task.EstimatedEndDate != DateTime.MinValue && (((task.EstimatedStartDate != null) && task.EstimatedEndDate < task.EstimatedStartDate) || ((task.ActualStartDate != DateTime.MinValue) && task.EstimatedEndDate < task.ActualStartDate)))
+            return false;
+        if (task.ProductionDate ==  DateTime.MinValue || ((task.ActualStartDate != DateTime.MinValue) && task.ProductionDate > task.ActualStartDate) || ((task.EstimatedStartDate != DateTime.MinValue) && task.ProductionDate > task.EstimatedStartDate) || ((task.ActualEndDate != DateTime.MinValue) && task.ProductionDate > task.ActualEndDate) || ((task.EstimatedEndDate != null) && task.ProductionDate > task.EstimatedEndDate) || task.ProductionDate > task.Deadline)
+            return false;
+        if (task.Deadline == DateTime.MinValue || ((task.ActualStartDate != DateTime.MinValue) && task.Deadline < task.ActualStartDate) || ((task.EstimatedStartDate != DateTime.MinValue) && task.Deadline < task.EstimatedStartDate) || ((task.ActualEndDate != DateTime.MinValue) && task.Deadline < task.ActualEndDate) || ((task.EstimatedEndDate != DateTime.MinValue) && task.Deadline < task.EstimatedEndDate) || task.Deadline < task.ProductionDate)
+            return false;
+        if (task.Engineer != null && (_dal.Engineer.Read(task.Engineer.Id) == null || _dal.Engineer.Read(task.Engineer.Id)!.Name!=task.Engineer.Name))
+            return false;
+        if (task.Difficulty == EngineerExperience.All)
+            return false;
+        if (task.Engineer != null && _dal.Engineer.Read(task.Engineer.Id)!.Level < (DO.EngineerExperience)(int)task.Difficulty)
+            return false;
+        return true;
+    }
+
     public void Create(BO.Task task)
-
     { 
-
-        if(task.EstimatedStartDate!=null&&(((task.EstimatedEndDate != null)&&task.EstimatedStartDate>task.EstimatedEndDate)||((task.ActualEndDate!=null)&& task.EstimatedStartDate>task.ActualEndDate)))
+        if(!ValidateInput(task))
             throw new BlInValidInput("the details are invalid");
-        if (task.ActualStartDate != null && (((task.EstimatedEndDate != null) && task.ActualStartDate > task.EstimatedEndDate) || ((task.ActualEndDate != null) && task.ActualStartDate > task.ActualEndDate)))
-            throw new BlInValidInput("the details are invalid"); 
-        if (task.ActualEndDate != null && (((task.EstimatedStartDate != null) && task.ActualEndDate < task.EstimatedStartDate) || ((task.ActualStartDate != null) && task.ActualEndDate < task.ActualStartDate)))
-            throw new BlInValidInput("the details are invalid");
-        if (task.EstimatedEndDate != null && (((task.EstimatedStartDate != null) && task.EstimatedEndDate < task.EstimatedStartDate) ||((task.ActualStartDate != null) && task.EstimatedEndDate < task.ActualStartDate)))
-            throw new BlInValidInput("the details are invalid");
-        if(task.ProductionDate==null||((task.ActualStartDate!=null)&& task.ProductionDate>task.ActualStartDate)||((task.EstimatedStartDate!=null)&&task.ProductionDate>task.EstimatedStartDate)||((task.ActualEndDate!=null)&& task.ProductionDate>task.ActualEndDate)|| ((task.EstimatedEndDate!=null)&&task.ProductionDate>task.EstimatedEndDate)|| task.ProductionDate>task.Deadline)
-            throw new BlInValidInput("the details are invalid");
-        if (task.Deadline == null || ((task.ActualStartDate != null) && task.Deadline< task.ActualStartDate) || ((task.EstimatedStartDate != null) && task.Deadline < task.EstimatedStartDate) || ((task.ActualEndDate != null) && task.Deadline < task.ActualEndDate) || ((task.EstimatedEndDate != null) && task.Deadline < task.EstimatedEndDate) || task.Deadline < task.ProductionDate)
-            throw new BlInValidInput("the details are invalid");
-
-        //דחחוף ולידציההההההההה
-        //למה צריך לבדוק id זה בכלל מספר רץ
-        /*        if (task.Id <= 0)
-                    //לשאול את המורה לגבי ה כינוי של ה task
-                    throw new BlInValidInput("the details are invalid");*/
         DO.Task doTask = new(task.Id, task.Description, task.ProductionDate, task.Deadline, (DO.EngineerExperience)(int)task.Difficulty
             , task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
             , task.EstimatedStartDate, task.ActualStartDate, task.EstimatedEndDate, task.ActualEndDate, task.TaskNickname
@@ -106,7 +111,6 @@ internal class TaskImplementation : ITask
             DependenciesList = DependenciesList,
             Milestone = milestoneInTask,
             EstimatedStartDate = task.EstimatedStartDate,
-            //מה עם משך הזמן של המשימה???
             ActualStartDate = task.StartDate,
             EstimatedEndDate = task.EstimatedEndDate,
             Deadline = task.Deadline,
@@ -132,7 +136,6 @@ internal class TaskImplementation : ITask
                                      DependenciesList = null,
                                      Milestone = null,
                                      EstimatedStartDate = doTask.EstimatedStartDate,
-                                     //מה עם משך הזמן של המשימה???
                                      ActualStartDate = doTask.StartDate,
                                      EstimatedEndDate = doTask.EstimatedEndDate,
                                      Deadline = doTask.Deadline,
@@ -147,7 +150,8 @@ internal class TaskImplementation : ITask
     }
     public void Update(BO.Task task)
     {
-        //נתונים ibput לעשות וולידצית 
+        if (!ValidateInput(task))
+            throw new BlInValidInput("the details are invalid");
         DO.Task doTask = new(task.Id, task.Description, task.ProductionDate,
              task.Deadline, (DO.EngineerExperience)(int)task.Difficulty, task.Engineer?.Id, (task.Milestone) != null ? true : false, (task.ActualEndDate - task.ActualStartDate)
            , task.EstimatedStartDate, task.ActualStartDate, task.EstimatedEndDate, task.ActualEndDate

@@ -45,7 +45,7 @@ namespace PL.Task
             InitializeComponent();
             ID = currentId;
             CurrentTask = (currentId == 0) ? new() : s_bl.Task.Read(currentId);
-            //איך להשתמש עם חריגות ואיך לומר אם הוא נל????
+            
         }
 
         private void AddUpdate_Click(object sender, RoutedEventArgs e)

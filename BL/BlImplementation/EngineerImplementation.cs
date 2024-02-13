@@ -25,14 +25,19 @@ internal class EngineerImplementation : IEngineer
             return false;
         if (engineer.Email != "" && !IsValidEmail(engineer.Email))
             return false;
+        if (engineer.Level == EngineerExperience.All)
+            return false;
+        List<DO.Task>? tasks = _dal.Task.ReadAll(task => (task.EngineerId != null) && task.EngineerId == engineer.Id).Where(task => task.Difficulty > (DO.EngineerExperience)(int)engineer.Level).ToList();
+        if (tasks.Count!=0)
+            return false;
         return true;
     }
     private TaskInEngineer? ReadTaskInEngineer(int id)
     {
         List<DO.Task?> tasks = _dal.Task.ReadAll().ToList();
         TaskInEngineer? taskInEngineer = (from t in tasks
-                                          let engineerId = t.EngineerId
-                                          where engineerId == id
+                                          let engineerId = t.EngineerId 
+                                          where engineerId == id && t.FinalDate>DateTime.Now
                                           select new TaskInEngineer { Id = t.Id, TaskNickname = t.TaskNickname }).FirstOrDefault();
         return taskInEngineer;
     }
@@ -73,7 +78,6 @@ internal class EngineerImplementation : IEngineer
 
     public BO.Engineer? Read(int id)
     {
-        ///לעשות לפי חריגות מתאימות!!!
         DO.Engineer? engineer = _dal.Engineer.Read(id);
         if (engineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does not exists");
@@ -85,19 +89,8 @@ internal class EngineerImplementation : IEngineer
     }
 
 
-    public IEnumerable<BO.Engineer> ReadAll(Func<BO.Engineer, bool>? filter = null)
+    public IEnumerable<BO.EngineerInList> ReadAll(Func<BO.Engineer, bool>? filter = null)
     {
-        /*        return from DO.Engineer doEngineer in _dal.Engineer.ReadAll((Func<DO.Engineer, bool>?)filter).ToList()
-                        select new BO.Engineer
-                        {
-                            Id = doEngineer.Id,
-                            Name = doEngineer.Name,
-                            Email = doEngineer.Email,
-                            Level = (BO.EngineerExperience)(int)doEngineer.Level,
-                            SaleryPerHour = doEngineer.SaleryPerHour,
-                            Task = ReadTaskInEngineer(doEngineer.Id)
-
-                        };*/
         List<BO.Engineer> boEngineers= (from DO.Engineer doEngineer in _dal.Engineer.ReadAll()
                                                                    select new BO.Engineer
                                                                    {
@@ -109,8 +102,8 @@ internal class EngineerImplementation : IEngineer
                                                                        Task = ReadTaskInEngineer(doEngineer.Id)
 
                                                                    }).ToList();
-        return  (filter != null)?  boEngineers.Where(bEngineer => filter!(bEngineer)): boEngineers;
-
+        return (filter != null) ? boEngineers.Where(bEngineer => filter!(bEngineer)).Select(bEngineer => new BO.EngineerInList { Id = bEngineer.Id, Name = bEngineer.Name, Level = bEngineer.Level }).ToList()
+            : boEngineers.Select(bEngineer => new BO.EngineerInList { Id = bEngineer.Id, Name = bEngineer.Name, Level = bEngineer.Level }).ToList();
     }
 
     public void Update(Engineer engineer)
@@ -118,7 +111,6 @@ internal class EngineerImplementation : IEngineer
         if (!ValidateInput(engineer))
             throw new BlInValidInput("the details are invalid");
         DO.Engineer newEngineer = new(engineer.Id, engineer.Name, (DO.EngineerExperience)(int)engineer.Level, engineer.SaleryPerHour, engineer.Email);
-        //האם צריך להתיחס לtask של המהנדס???
         try
         {
             _dal.Engineer.Update(newEngineer);
