@@ -23,12 +23,15 @@ namespace PL.Engineer
     {
         private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.EngineerExperience Experience { get; set; } = BO.EngineerExperience.All;
+        private void UpdateTheList(Object sender, EventArgs e)
+        {
+            var temp = s_bl?.Engineer.ReadAll().ToList();
+            EngineerList = temp == null ? new() : new(temp);
+        }
         public EngineerListWindow()
         {
             InitializeComponent();
-            var temp = s_bl?.Engineer.ReadAll().ToList();
-            temp.ForEach(e => e.ToString());
-            EngineerList = temp == null ? new() : new(temp);
+            Activated += UpdateTheList!;
         }
         public ObservableCollection<BO.EngineerInList> EngineerList
         {
@@ -50,9 +53,6 @@ namespace PL.Engineer
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             new EngineerWindow().ShowDialog();
-   /*         InitializeComponent();*/
-            var tempEngineerList = s_bl?.Engineer.ReadAll();
-            EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
         }
 
         private void Update_SelectionChanged(object sender, MouseButtonEventArgs e)
@@ -60,9 +60,6 @@ namespace PL.Engineer
             BO.EngineerInList? engineerInlist = (sender as ListView)?.SelectedItem as BO.EngineerInList;
             if(engineerInlist!=null)
                 new EngineerWindow(engineerInlist!.Id).ShowDialog();
-            InitializeComponent();
-            var tempEngineerList = s_bl?.Engineer.ReadAll();
-            EngineerList = tempEngineerList == null ? new() : new(tempEngineerList);
         }
     }
 }

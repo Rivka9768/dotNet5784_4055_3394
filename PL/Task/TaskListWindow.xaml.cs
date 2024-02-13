@@ -24,12 +24,16 @@ namespace PL.Task
         private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.Status Status { get; set; } = BO.Status.All;
 
+        private void UpdateTheList(Object sender, EventArgs e)
+        {
+            var temp = s_bl?.Task.ReadAll().ToList();
+            TaskList = temp == null ? new() : new(temp);
+        }
+
         public TaskListWindow()
         {
             InitializeComponent();
-
-            var temp = s_bl?.Task.ReadAll().ToList();
-            TaskList = temp == null ? new() : new(temp);
+            Activated += UpdateTheList!;
         }
 
         public ObservableCollection<BO.TaskInList> TaskList
@@ -53,21 +57,14 @@ namespace PL.Task
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             new TaskWindow().ShowDialog();
-
-            var temp = s_bl?.Task.ReadAll().ToList();
-            TaskList = temp == null ? new() : new(temp);
         }
 
         private void Update_SelectionChanged(object sender, MouseButtonEventArgs m)
         {
-            
-                BO.TaskInList? taskInlist = (sender as ListView)?.SelectedItem as BO.TaskInList;
-                if (taskInlist != null)
-                    new TaskWindow(taskInlist!.Id).ShowDialog();
 
-            var temp = s_bl?.Task.ReadAll().ToList();
-            TaskList = temp == null ? new() : new(temp);
-
+            BO.TaskInList? taskInlist = (sender as ListView)?.SelectedItem as BO.TaskInList;
+            if (taskInlist != null)
+                new TaskWindow(taskInlist!.Id).ShowDialog();
         }
     }
 }
