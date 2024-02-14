@@ -48,6 +48,11 @@ namespace PL.Task
             
         }
 
+        /// <summary>
+        /// adds a new task or updates an already existing task
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try

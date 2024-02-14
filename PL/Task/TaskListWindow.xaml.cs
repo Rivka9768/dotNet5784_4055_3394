@@ -24,9 +24,14 @@ namespace PL.Task
         private static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public BO.Status Status { get; set; } = BO.Status.All;
 
+        /// <summary>
+        /// refreshes the task list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateTheList(Object sender, EventArgs e)
         {
-            var temp = s_bl?.Task.ReadAll().ToList();
+            var temp = s_bl?.Task.ReadAll().OrderBy(task=>task.Id);
             TaskList = temp == null ? new() : new(temp);
         }
 
@@ -46,7 +51,11 @@ namespace PL.Task
         public static readonly DependencyProperty TaskListProperty =
             DependencyProperty.Register("TaskList", typeof(ObservableCollection<BO.TaskInList>), typeof(TaskListWindow), new PropertyMetadata(null));
 
-
+        /// <summary>
+        /// shows the list of tasks that match the status selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StatusSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var tempTaskList = Status == BO.Status.All ?
@@ -54,11 +63,22 @@ namespace PL.Task
             s_bl?.Task.ReadAll(taskInList => taskInList.Status == Status);
             TaskList = tempTaskList == null ? new() : new(tempTaskList);
         }
+
+        /// <summary>
+        /// opens a window which there the user can input detailes for adding a engineer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             new TaskWindow().ShowDialog();
         }
 
+        /// <summary>
+        /// opens a window which there the user can view the task's detailes or change/input detailes in order to update the task
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="m"></param>
         private void Update_SelectionChanged(object sender, MouseButtonEventArgs m)
         {
 

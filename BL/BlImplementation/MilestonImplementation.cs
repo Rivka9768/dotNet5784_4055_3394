@@ -9,13 +9,17 @@ internal class MilestonImplementation : IMilestone
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
 
-    private Status GetStatus(DO.Task task)
+    /// <summary>
+    /// claculates the status of the milestone according to it's start date,final date and deadline.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns> status </returns>
+    private static Status GetStatus(DO.Task task)
     {
         Status status = Status.Unscheduled;
         if (task.StartDate != null)
         {
-            //לשאול את המורה מזה אומר בסיכון
-            if (task.FinalDate > task.Deadline || DateTime.Now > task.Deadline)
+            if (task.FinalDate != null && (((DateTime)task.FinalDate).AddDays(4) >= task.Deadline))
                 status = Status.InJeopardy;
             else
             {
@@ -28,6 +32,11 @@ internal class MilestonImplementation : IMilestone
         return status;
     }
 
+    /// <summary>
+    /// calculates the progress percentage of the tasks in the milestone.
+    /// </summary>
+    /// <param name="taskInList"></param>
+    /// <returns>progress percentage </returns>
     private double CalcProgressPercentage(List<TaskInList>? taskInList)
     {
         if(taskInList==null)
@@ -37,6 +46,13 @@ internal class MilestonImplementation : IMilestone
                            select _dal.Task.Read(t.Id)).ToList();
         return (double)(completedTasks.Count / taskInList.Count) * 100;
     }
+
+    /// <summary>
+    /// returns a milestone with the Id given.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public Milestone? Read(int id)
     {
         DO.Task? task = _dal.Task.Read(id);
@@ -47,7 +63,6 @@ internal class MilestonImplementation : IMilestone
                                            where IdDependantTask == id
                                            let prevTask = _dal.Task.Read(d.IdPreviousTask)
                                            select new TaskInList { Id = d.IdPreviousTask, TaskNickname = prevTask!.TaskNickname, Description = prevTask!.Description,Status=GetStatus(prevTask) }).ToList();
-        //איך באמת מחשבים אחוז התקדמות???
         return new BO.Milestone
         {
             Id = id,
@@ -65,7 +80,13 @@ internal class MilestonImplementation : IMilestone
         };
 }
 
-    //האם הupdate אמור לקבל רק  id?
+    /// <summary>
+    /// updates detailes of an already existing milestone
+    /// </summary>
+    /// <param name="milestone"></param>
+    /// <returns> updated milestone </returns>
+    /// <exception cref="BO.BlNullPropertyException"></exception>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public Milestone Update(Milestone milestone)
     {
         if (milestone == null)
@@ -73,14 +94,13 @@ internal class MilestonImplementation : IMilestone
         DO.Task? task = _dal.Task.Read(milestone.Id);
         if (task == null || task.Milestone == false)
             throw new BO.BlDoesNotExistException($"milestone with Id={milestone.Id} does not exist");
-        //האם זה תקין???
+
         /* DO.Task? updatedTask = new DO.Task { Description = (milestone.Description != null) ? milestone.Description : task.Description,
              TaskNickname = (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname : task.TaskNickname, 
              Remarks = (milestone.Remarks != null) ? milestone.Remarks : task.Remarks };*/
-        //האם יש דרך יותר סבירה לעדכן רק כמה שדות???
+
         DO.Task? updatedTask = new(task.Id, (milestone.Description != null) ? milestone.Description : task.Description, task.ProductionDate, task.Deadline, task.Difficulty
-            , task.EngineerId, task.Milestone, task.Duration
-            , task.EstimatedStartDate, task.StartDate, task.EstimatedEndDate, task.FinalDate, (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname : task.TaskNickname
+            , task.EngineerId, task.Milestone, task.Duration,task.EstimatedStartDate, task.StartDate, task.EstimatedEndDate, task.FinalDate, (milestone.MilestoneNickname != null) ? milestone.MilestoneNickname : task.TaskNickname
             , (milestone.Remarks != null) ? milestone.Remarks : task.Remarks, task.Products);
         try
         {

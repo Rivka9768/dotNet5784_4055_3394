@@ -161,7 +161,7 @@ namespace DalTest
             string? remarks = Console.ReadLine();
             string? products = Console.ReadLine();
             DO.Task newTask = new(0, description, productionDate, deadline, (EngineerExperience)difficulty,
-                engineerId, milestone, duration,estimatedStartDate,startDate, estimatedEndDate, finalDate, taskNickname, remarks, products);
+                engineerId, milestone, duration, estimatedStartDate,startDate, estimatedEndDate, finalDate, taskNickname, remarks, products);
             s_dal.Task!.Create(newTask);
         }
 

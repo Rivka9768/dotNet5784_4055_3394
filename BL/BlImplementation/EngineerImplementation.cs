@@ -9,29 +9,46 @@ namespace BlImplementation;
 internal class EngineerImplementation : IEngineer
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
+    /// <summary>
+    /// checks if engineer's email address is legal.
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns> true if the email is legal and false otherwise </returns>
     private bool IsValidEmail(string email)
     {
         string pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|" + @"([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)" + @"@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
         var regex = new Regex(pattern, RegexOptions.IgnoreCase);
         return regex.IsMatch(email);
     }
-    private bool ValidateInput(Engineer engineer)
+
+    /// <summary>
+    /// validates engineer's detailes coming from the user's input
+    /// </summary>
+    /// <param name="engineer"></param>
+    /// <exception cref="BlInValidInput"></exception>
+    private void ValidateInput(Engineer engineer)
     {
         if (engineer.Id <= 0 && engineer.Id > 999999999)
-            return false;
-        if (engineer.Name == "")
-            return false;
+            throw new BlInValidInput("invalid ID");
+        if (engineer.Name == null)
+            throw new BlInValidInput("engineer's name can't be empty");
         if (engineer.SaleryPerHour <= 0)
-            return false;
-        if (engineer.Email != "" && !IsValidEmail(engineer.Email))
-            return false;
+            throw new BlInValidInput("engineer's salary is illegal");
+        if ((engineer.Email != null) && !IsValidEmail(engineer.Email))
+            throw new BlInValidInput("engineer's email address is illegal");
         if (engineer.Level == EngineerExperience.All)
-            return false;
-        List<DO.Task>? tasks = _dal.Task.ReadAll(task => (task.EngineerId != null) && task.EngineerId == engineer.Id).Where(task => task.Difficulty > (DO.EngineerExperience)(int)engineer.Level).ToList();
+            throw new BlInValidInput("can't choose level 'All' as engineer's level");
+        List<DO.Task> tasks = _dal.Task.ReadAll(task => (task.EngineerId != null) && task.EngineerId == engineer.Id).Where(task => task!.Difficulty > (DO.EngineerExperience)(int)engineer.Level).ToList()!;
         if (tasks.Count!=0)
-            return false;
-        return true;
+            throw new BlInValidInput("invalid engineer level detailes");
+        return ;
     }
+    
+    /// <summary>
+    /// calculates the current task of the engineer.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns> engineer's current task </returns>
     private TaskInEngineer? ReadTaskInEngineer(int id)
     {
         List<DO.Task?> tasks = _dal.Task.ReadAll().ToList();
@@ -41,10 +58,15 @@ internal class EngineerImplementation : IEngineer
                                           select new TaskInEngineer { Id = t.Id, TaskNickname = t.TaskNickname }).FirstOrDefault();
         return taskInEngineer;
     }
+    
+    /// <summary>
+    /// adds a new engineer
+    /// </summary>
+    /// <param name="engineer"></param>
+    /// <exception cref="BO.BlAlreadyExistsException"></exception>
     public void Create(BO.Engineer engineer)
     {
-        if (!ValidateInput(engineer))
-            throw new BlInValidInput("the details are invalid");
+        ValidateInput(engineer);
         DO.Engineer newEngineer = new(engineer.Id, engineer.Name, (DO.EngineerExperience)(int)engineer.Level, engineer.SaleryPerHour, engineer.Email);
         try
         {
@@ -57,6 +79,12 @@ internal class EngineerImplementation : IEngineer
 
     }
 
+    /// <summary>
+    /// deletes an engineer by it's Id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="BlDeletionImpossible"></exception>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public void Delete(int id)
     {
         TaskInEngineer? taskInEngineer = ReadTaskInEngineer(id);
@@ -76,6 +104,12 @@ internal class EngineerImplementation : IEngineer
         }
     }
 
+    /// <summary>
+    /// returns the engineer with the Id given.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns> engineer </returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public BO.Engineer? Read(int id)
     {
         DO.Engineer? engineer = _dal.Engineer.Read(id);
@@ -88,7 +122,11 @@ internal class EngineerImplementation : IEngineer
         return new BO.Engineer { Id = engineer.Id, Name = engineer.Name, Level = (BO.EngineerExperience)(int)engineer.Level, SaleryPerHour = engineer.SaleryPerHour, Email = engineer.Email, Task = taskInEngineer };
     }
 
-
+    /// <summary>
+    /// returns a list of engineers which matches the filter if givan in the format of the entity EngineerInList.
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns> a list of EngineerInList</returns>
     public IEnumerable<BO.EngineerInList> ReadAll(Func<BO.Engineer, bool>? filter = null)
     {
         List<BO.Engineer> boEngineers= (from DO.Engineer doEngineer in _dal.Engineer.ReadAll()
@@ -106,10 +144,14 @@ internal class EngineerImplementation : IEngineer
             : boEngineers.Select(bEngineer => new BO.EngineerInList { Id = bEngineer.Id, Name = bEngineer.Name, Level = bEngineer.Level }).ToList();
     }
 
+    /// <summary>
+    /// updates detailes of an already existing engineer
+    /// </summary>
+    /// <param name="engineer"></param>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
     public void Update(Engineer engineer)
     {
-        if (!ValidateInput(engineer))
-            throw new BlInValidInput("the details are invalid");
+        ValidateInput(engineer);
         DO.Engineer newEngineer = new(engineer.Id, engineer.Name, (DO.EngineerExperience)(int)engineer.Level, engineer.SaleryPerHour, engineer.Email);
         try
         {

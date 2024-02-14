@@ -47,6 +47,11 @@ namespace PL.Engineer
             //איך להשתמש עם חריגות ואיך לומר אם הוא נל????
         }
 
+        /// <summary>
+        /// adds a new engineer or updates an already existing engineer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
